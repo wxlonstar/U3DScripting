@@ -27,6 +27,7 @@ public class UseCoroutineColor : MonoBehaviour {
             this.GetComponent<MeshRenderer>().material.color = Color.Lerp(currentColor, Color.blue, i);
             yield return new WaitForSeconds(0.1f);
         }
+        Debug.Log("Coroutine ended.");
     }
 
 }   
