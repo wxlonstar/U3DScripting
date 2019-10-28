@@ -26,7 +26,7 @@ namespace RunRun.LevelCreator {
             CleanScene();
             GameObject levelInScene = new GameObject("Level");
             levelInScene.transform.position = Vector3.zero;
-            levelInScene.AddComponent<Level>();
+            levelInScene.AddComponent<MileCode.MileTest.MyLevel>();
         }
     }
 }
