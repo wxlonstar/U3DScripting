@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
+[CustomEditor(typeof(Hey))]
 class testGizmo {       // The Class still works, but will be compiled when building
     [DrawGizmo(GizmoType.InSelectionHierarchy |     
         GizmoType.NotInSelectionHierarchy |

@@ -11,7 +11,6 @@ namespace MileCode.MileTest {
                 GizmoType.Active |
                 GizmoType.Pickable
             )]
-            
         private static void MyCustomOnDrawGizmos(TargetExample targetExample, GizmoType gizmoType) {
             Gizmos.color = Color.blue;
             Gizmos.DrawWireCube(targetExample.transform.position, Vector3.one);
