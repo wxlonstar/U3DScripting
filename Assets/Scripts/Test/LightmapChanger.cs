@@ -176,6 +176,16 @@ public class LightmapChanger : MonoBehaviour {
                 RendererInfo info = new RendererInfo();
                 info.renderer = mr;
                 info.lightmapOffsetScale = mr.lightmapScaleOffset;
+
+                Texture2D lightmapColor = LightmapSettings.lightmaps[mr.lightmapIndex].lightmapColor;
+                info.lightmapIndex = newLightmapsTextures.IndexOf(lightmapColor);
+                if(info.lightmapIndex == -1) {
+                    info.lightmapIndex = newLightmapsTextures.Count;
+                    newLightmapsTextures.Add(lightmapColor);
+                }
+                if(newLightmapsMode != LightmapsMode.NonDirectional) {
+                    Texture2D lightmapDir = LightmapSettings.lightmaps[mr.lightmapIndex].lightmapDir;
+                }
             }
         }
     }
