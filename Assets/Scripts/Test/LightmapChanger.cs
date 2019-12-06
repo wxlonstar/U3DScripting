@@ -8,10 +8,10 @@ using System.Collections.Generic;
 public class LightmapChanger : MonoBehaviour {
     private string _JsonFileName = "lightmapConfiguration.txt";
     [SerializeField]
-    private string map_resourceFolder = "LightMapData_1";
+    private string m_resourceFolder = "LightMapData_1";
     public string resourceFolder {
         get {
-            return map_resourceFolder;
+            return m_resourceFolder;
         }
     }
 
@@ -60,13 +60,13 @@ public class LightmapChanger : MonoBehaviour {
     }
 
     private void CreateLightmapDirectory(string dir) {
-        if(!IsLightmpaDirectoryExists(map_resourceFolder)) {
+        if(!IsLightmpaDirectoryExists(m_resourceFolder)) {
             Directory.CreateDirectory(GetLightmapsDirectory(dir));
         }
     }
 
     public void Load(string folderName) {
-        map_resourceFolder = folderName;
+        m_resourceFolder = folderName;
         Load();
     }
 
@@ -76,12 +76,12 @@ public class LightmapChanger : MonoBehaviour {
         var newLightmaps = new LightmapData[lightingScenarioData.lightmaps.Length];
         for(int i = 0; i < newLightmaps.Length; i++) {
             newLightmaps[i] = new LightmapData();
-            //newLightmaps[i].lightmapLight = Resources.Load<Texture2D>(map_resourceFolder + "/" + lightingScenarioData.lightmaps[i].name);
-            newLightmaps[i].lightmapColor = Resources.Load<Texture2D>(map_resourceFolder + "/" + lightingScenarioData.lightmaps[i].name);
+            //newLightmaps[i].lightmapLight = Resources.Load<Texture2D>(m_resourceFolder + "/" + lightingScenarioData.lightmaps[i].name);
+            newLightmaps[i].lightmapColor = Resources.Load<Texture2D>(m_resourceFolder + "/" + lightingScenarioData.lightmaps[i].name);
             if(lightingScenarioData.lightmapsMode != LightmapsMode.NonDirectional) {
-                newLightmaps[i].lightmapDir = Resources.Load<Texture2D>(map_resourceFolder + "/" + lightingScenarioData.lightmaps_Dir[i].name);
+                newLightmaps[i].lightmapDir = Resources.Load<Texture2D>(m_resourceFolder + "/" + lightingScenarioData.lightmaps_Dir[i].name);
                 if(lightingScenarioData.lightmaps_Shadow[i] != null) {      // if the texture exists 
-                    newLightmaps[i].shadowMask = Resources.Load<Texture2D>(map_resourceFolder + "/" + lightingScenarioData.lightmaps_Shadow[i].name);
+                    newLightmaps[i].shadowMask = Resources.Load<Texture2D>(m_resourceFolder + "/" + lightingScenarioData.lightmaps_Shadow[i].name);
                 }
             }
         }
@@ -154,7 +154,7 @@ public class LightmapChanger : MonoBehaviour {
     }
 
     private LightingScenarioData LoadJsonData() {
-        absoluteName = GetLightmapsDirectory(map_resourceFolder) + _JsonFileName;
+        absoluteName = GetLightmapsDirectory(m_resourceFolder) + _JsonFileName;
         string jsonContent = ReadJsonFile(absoluteName);
         return lightingScenarioData = JsonUtility.FromJson<LightingScenarioData>(jsonContent);
     }
@@ -185,8 +185,74 @@ public class LightmapChanger : MonoBehaviour {
                 }
                 if(newLightmapsMode != LightmapsMode.NonDirectional) {
                     Texture2D lightmapDir = LightmapSettings.lightmaps[mr.lightmapIndex].lightmapDir;
+                    info.lightmapIndex = newLightmapsTexturesDir.IndexOf(lightmapDir);
+                    if(info.lightmapIndex == -1) {
+                        info.lightmapIndex = newLightmapsTexturesDir.Count;
+                        newLightmapsTexturesDir.Add(lightmapDir);
+                    }
+                    Texture2D lightmapShadow = LightmapSettings.lightmaps[mr.lightmapIndex].shadowMask;
+                    info.lightmapIndex = newLightmapsTexturesShadow.IndexOf(lightmapShadow);
+                    if(info.lightmapIndex == -1) {
+                        info.lightmapIndex = newLightmapsTexturesShadow.Count;
+                        newLightmapsTexturesShadow.Add(lightmapShadow);
+                    }
                 }
+                newRendererInfos.Add(info);
             }
         }
+        lightingScenarioData.lightmapsMode = newLightmapsMode;
+        lightingScenarioData.lightmaps = newLightmapsTextures.ToArray();
+        if(newLightmapsMode != LightmapsMode.NonDirectional) {
+            lightingScenarioData.lightmaps_Dir = newLightmapsTexturesDir.ToArray();
+            lightingScenarioData.lightmaps_Shadow = newLightmapsTexturesShadow.ToArray();
+        }
+        lightingScenarioData.rendererInfos = newRendererInfos.ToArray();
+        var scene_LightProbes = new SphericalHarmonicsL2[LightmapSettings.lightProbes.bakedProbes.Length];
+        scene_LightProbes = LightmapSettings.lightProbes.bakedProbes;
+        for(int i = 0; i < scene_LightProbes.Length; i++) {
+            var SHCoeff = new SphericalHarmonics();
+            for(int j = 0; j < 3; j++) {
+                for(int k = 0; k <9; k++) {
+                    SHCoeff.probeCoefficient[j * 9 + k] = scene_LightProbes[i][j, k];
+                }
+            }
+            newSphericalHarmonicsList.Add(SHCoeff);
+        }
+        lightingScenarioData.lightProbes = newSphericalHarmonicsList.ToArray();
+        CreateLightmapDirectory(m_resourceFolder);
+        string resourcesDir = GetLightmapsDirectory(m_resourceFolder);
+        CopyTextureToResource(resourcesDir, lightingScenarioData.lightmaps);
+        CopyTextureToResource(resourcesDir, lightingScenarioData.lightmaps_Dir);
+        CopyTextureToResource(resourcesDir, lightingScenarioData.lightmaps_Shadow);
+        string jsonContent = JsonUtility.ToJson(lightingScenarioData);
+        WriteJsonFile(resourcesDir, jsonContent);
+    }
+    private void CopyTextureToResource(string toPath, Texture2D[] textures) {
+        for(int i = 0; i < textures.Length; i++) {
+            Texture2D texture = textures[i];
+            if(texture != null) {
+                FileUtil.ReplaceFile(AssetDatabase.GetAssetPath(texture), toPath + Path.GetFileName(AssetDatabase.GetAssetPath(texture)));
+                AssetDatabase.Refresh();
+                Texture2D newTexture = Resources.Load<Texture2D>(m_resourceFolder + "/" + texture.name);
+                CopyTextureImporterProperties(textures[i], newTexture);
+                AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(newTexture));
+                EditorUtility.CompressTexture(newTexture, textures[i].format, UnityEditor.TextureCompressionQuality.Best);
+                textures[i] = newTexture;
+            }
+        }
+    }
+
+    private void CopyTextureImporterProperties(Texture2D fromTexture, Texture2D toTexture) {
+        TextureImporter fromTextureImporter = GetTextureImporter(fromTexture);
+        TextureImporter toTextureImporter = GetTextureImporter(toTexture);
+        toTextureImporter.wrapMode = fromTextureImporter.wrapMode;
+        toTextureImporter.anisoLevel = fromTextureImporter.anisoLevel;
+
+    }
+
+    private TextureImporter GetTextureImporter(Texture2D texture) {
+        string newTexturePath = AssetDatabase.GetAssetPath(texture);
+        TextureImporter importer = AssetImporter.GetAtPath(newTexturePath) as TextureImporter;
+        return importer;
     }
 }
