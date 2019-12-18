@@ -2,7 +2,7 @@
 using UnityEditor;
 
 [CustomEditor(typeof(Hey))]
-class testGizmo {       // The Class still works, but will be compiled when building
+class testGizmo : Editor {       // The Class still works, but will be compiled when building
     [DrawGizmo(GizmoType.InSelectionHierarchy |     
         GizmoType.NotInSelectionHierarchy |
         GizmoType.Active
