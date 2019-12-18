@@ -16,4 +16,12 @@ public class LongHoldTrigged : MonoBehaviour {
     public void Fly() {
         Debug.Log("I'm Flying...");
     }
+
+    public void SetTrue() {
+        Debug.Log("Machine true");
+    }
+
+    public void SetFalse() {
+        Debug.Log("Machine false");
+    }
 }

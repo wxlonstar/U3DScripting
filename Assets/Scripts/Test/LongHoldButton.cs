@@ -11,16 +11,20 @@ public class LongHoldButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public UnityEvent onLongClick;
 
+    public LongHoldTrigged lht;
+
     
     public void OnPointerDown(PointerEventData eventData) {
         pointerDown = true;
-        Debug.Log("OnPointerDown");
+        //Debug.Log("OnPointerDown");
+        lht.SetTrue();
     }
     
 
     public void OnPointerUp(PointerEventData eventData) {
         Reset();
-        Debug.Log("OnPointerUp");
+        lht.SetFalse();
+        //Debug.Log("OnPointerUp");
     }
 
     private void UpdateV1() {
