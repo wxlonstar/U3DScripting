@@ -2,18 +2,19 @@
 using UnityEditor;
 using System.Collections.Generic;
 
-public class LightmapController : EditorWindow {
+public class LightmapController : EditorWindow{
     private float rangeMax = 50f;
     private float rangeMin = 10f;
     private float scale = 1f;
+    private bool isSearchable = false;
     [MenuItem("Lightmap/ScaleController")]
     public static void ShowWindow() {
         GetWindow<LightmapController>("ScaleController");
     }
 
     private void OnGUI() {
-        GUILayout.Label("根据体积调整 LightmapScale 参数", EditorStyles.boldLabel);
-        GUILayout.Space(10);
+        GUILayout.Label("根据体积调整 LightmapScale 参数: ", EditorStyles.boldLabel);
+        GUILayout.Space(2);
         //GUILayout.BeginHorizontal();
         
         GUILayout.Label("先设置一个范围，单位(米), 从", EditorStyles.boldLabel);
@@ -54,7 +55,49 @@ public class LightmapController : EditorWindow {
             }
         }
         GUILayout.EndHorizontal();
+        GUILayout.Space(5);
+        GUILayout.Label("-------------------------------------------------");
+        GUILayout.Label("选中一个物体，获得与其体积相同的所有物体: ", EditorStyles.boldLabel);
+        
+        if (GUILayout.Button("搜索") && isSearchable == true) {
+            GetBySize(CurrentObj());
+        }
+        GUILayout.Space(3);
+        GUILayout.Label("当前物体: ");
+        CurrentObj();
+        //GUILayout.Label(Selection.activeGameObject.name);
+        
     }
+
+    void GetBySize(GameObject obj) {
+        MeshRenderer mr = obj.GetComponent<MeshRenderer>();
+        if(mr != null) {
+            float temp = Mathf.Max(mr.bounds.size.x, mr.bounds.size.y);
+            temp = Mathf.Max(mr.bounds.size.z, temp);
+            GetDesiredObjs(temp, temp);
+        } else {
+            Debug.Log("并非可渲染对象");
+        }
+    }
+
+    GameObject CurrentObj() {
+        GameObject obj = null;
+        if(Selection.activeGameObject != null) {
+            if(Selection.gameObjects.Length > 1) {
+                GUILayout.Label("多个");
+                isSearchable = false;
+            }else {
+                obj = Selection.activeGameObject;
+                GUILayout.Label(obj.name);
+                isSearchable = true;
+            }
+        }else {
+            GUILayout.Label("没有");
+            isSearchable = false;
+        }
+        return obj;
+    }
+
 
     void SetDesiredScale(float scale) {
         if(scale > 1f) {
