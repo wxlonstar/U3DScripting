@@ -21,7 +21,7 @@
       #pragma vertex vert
       #pragma fragment frag
       #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
-      //#pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+      #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
       #pragma multi_compile _ _SHADOWS_SOFT
       #pragma shader_feature _RECEIVE_SHADOWS_OFF
       #pragma multi_compile _ LIGHTMAP_ON
@@ -127,11 +127,13 @@
           Light mainLight = GetMainLight(inputData.shadowCoord);
           
           MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, half4(0, 0, 0, 0));
-          //half4 c = UniversalFragmentBlinnPhong(inputData, half3(0.5, 0.5, 0.5), half4(0.5, 0.5, 0.5, 0.5), 0.5, half3(0, 0, 0), 1);
-          return half4(inputData.bakedGI, 1);
+          half4 c = UniversalFragmentBlinnPhong(inputData, half3(0.5, 0.5, 0.5), half4(0.5, 0.5, 0.5, 0.5), 0.5, half3(0, 0, 0), 1);
+          //return half4(1, 1, 1, 1);
+          return c;
         }
       ENDHLSL
     }
+    UsePass "Universal Render Pipeline/Lit/DepthOnly"
   }
   Fallback "Diffuse"
 }
