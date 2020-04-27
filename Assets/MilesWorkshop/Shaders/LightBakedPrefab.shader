@@ -1,14 +1,20 @@
 ﻿Shader "MileShader/LightBakedPrefab" {
   Properties {
     _MainTex("Albedo (RGB)", 2D) = "white" {}
-    _Lightmap("Lightmap", 2D) = "white" {}
-    _FakeHalfDir("Light Direction", Vector) = (0, 1, -0.25, 0)
+    [NoScaleOffset]_Lightmap("Lightmap", 2D) = "white" {}
+    _SpecularColor("Specular Color", Color) = (0, 0, 0, 0)
+    _Gloss("Gloss", Range(8, 200)) = 50
   }
   SubShader {
-    Tags{"Queue" = "Geometry+1"}
+    Tags{"Queue" = "Geometry" "IgnoreProjecor" = "True" "RenderPipeline" = "UniversalPipeline"}
     Pass {
         Name "LBP"
         Tags {"LightMode" = "UniversalForward"}
+        Stencil {
+            Ref 2
+            Comp always
+            Pass replace
+        }
         HLSLPROGRAM
         #pragma prefer_hlslcc gles
         #pragma exclude_renderers d3d11_9x
@@ -29,12 +35,14 @@
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
-
         sampler2D _MainTex;
-        sampler2D _Lightmap;
+        //sampler2D _Lightmap;
+        TEXTURE2D(_Lightmap);      SAMPLER(sampler_Lightmap);
         CBUFFER_START(UnityPerMaterial)
         float4 _MainTex_ST;
         float4 _Lightmap_ST;
+        float _Gloss;
+        half4 _SpecularColor;
         CBUFFER_END
 
         struct a2v {
@@ -95,19 +103,38 @@
             inputData.bakedGI = SampleSHVertex(inputData.normalWS);
         }
 
+        half3 SampleLightmap_LBP(float2 lightmapUV, half3 normalWS) {
+            #ifdef UNITY_LIGHTMAP_FULL_HDR
+                bool encodeLightmap = false;
+            #else
+                bool encodeLightmap = true;
+            #endif
+            half4 decodeInstructions = half4(LIGHTMAP_HDR_MULTIPLIER, LIGHTMAP_HDR_EXPONENT, 0.0h, 0.0h);
+            half4 transformCoords = half4(1, 1, 0, 0);
+            return SampleSingleLightmap(TEXTURE2D_ARGS(_Lightmap, sampler_Lightmap), lightmapUV, transformCoords, encodeLightmap, decodeInstructions);
+        }
+
         half4 frag(v2f i) : SV_Target {
             UNITY_SETUP_INSTANCE_ID(i);
             UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-            
             InputData inputData;
             InitializeInputData(i, inputData);
             Light mainLight = GetMainLight(inputData.shadowCoord);
             // enable realtime shadow
             MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, half4(0, 0, 0, 0));
-            return half4(mainLight.shadowAttenuation, mainLight.shadowAttenuation, mainLight.shadowAttenuation, 1);
+            // specular color
+            half3 halfVec = SafeNormalize(mainLight.direction + inputData.viewDirectionWS);
+            half3 NdotH = saturate(dot(inputData.normalWS, halfVec));
+            half3 spec = pow(NdotH, _Gloss) * _SpecularColor.rgb;
+            // main texture
+            half4 mainTex = tex2D(_MainTex, i.uvTex);
+            // Lightmap
+            half3 lightmapColor = SampleLightmap_LBP(i.uvLightmap, inputData.normalWS);
+
+            // receive realtime shadow
+            half3 mixedRealtimeShadowWithLightmap = SubtractDirectMainLightFromLightmap(mainLight, inputData.normalWS, lightmapColor);
+            return half4(mixedRealtimeShadowWithLightmap, 1);
         }
-
-
         ENDHLSL
     }
   }
