@@ -1,127 +1,359 @@
 fileFormatVersion: 2
 guid: de9f2ff07abc69b4799588404d2e26be
-timeCreated: 1534978232
-licenseType: Store
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: Bear Mesh
-    100004: Eye Left
-    100006: Eye Right
-    100008: Bear
-    100010: Bear Head
-    100012: Bear Jaw
-    100014: Bear L Calf
-    100016: Bear L Clavicle
-    100018: Bear L Ear
-    100020: Bear L Eyebrow
-    100022: Bear L Finger0
-    100024: Bear L Finger1
-    100026: Bear L Foot
-    100028: Bear L Forearm
-    100030: Bear L Hand
-    100032: Bear L Lower Eyelid
-    100034: Bear L Lower Mouth
-    100036: Bear L Mouth
-    100038: Bear L Thigh
-    100040: Bear L Toe0
-    100042: Bear L Upper Eyelid
-    100044: Bear L Upper Mouth
-    100046: Bear L UpperArm
-    100048: Bear Neck
-    100050: Bear Nose
-    100052: Bear Pelvis
-    100054: Bear R Calf
-    100056: Bear R Clavicle
-    100058: Bear R Ear
-    100060: Bear R Eyebrow
-    100062: Bear R Finger0
-    100064: Bear R Finger1
-    100066: Bear R Foot
-    100068: Bear R Forearm
-    100070: Bear R Hand
-    100072: Bear R Lower Eyelid
-    100074: Bear R Lower Mouth
-    100076: Bear R Mouth
-    100078: Bear R Thigh
-    100080: Bear R Toe0
-    100082: Bear R Upper Eyelid
-    100084: Bear R Upper Mouth
-    100086: Bear R UpperArm
-    100088: Bear Spine
-    100090: Bear Spine1
-    100092: Bear Spine2
-    100094: Bear Tail
-    100096: Bear Tongue
-    100098: Bear Tongue02
-    100100: Bear Tongue03
-    400000: //RootNode
-    400002: Bear Mesh
-    400004: Eye Left
-    400006: Eye Right
-    400008: Bear
-    400010: Bear Head
-    400012: Bear Jaw
-    400014: Bear L Calf
-    400016: Bear L Clavicle
-    400018: Bear L Ear
-    400020: Bear L Eyebrow
-    400022: Bear L Finger0
-    400024: Bear L Finger1
-    400026: Bear L Foot
-    400028: Bear L Forearm
-    400030: Bear L Hand
-    400032: Bear L Lower Eyelid
-    400034: Bear L Lower Mouth
-    400036: Bear L Mouth
-    400038: Bear L Thigh
-    400040: Bear L Toe0
-    400042: Bear L Upper Eyelid
-    400044: Bear L Upper Mouth
-    400046: Bear L UpperArm
-    400048: Bear Neck
-    400050: Bear Nose
-    400052: Bear Pelvis
-    400054: Bear R Calf
-    400056: Bear R Clavicle
-    400058: Bear R Ear
-    400060: Bear R Eyebrow
-    400062: Bear R Finger0
-    400064: Bear R Finger1
-    400066: Bear R Foot
-    400068: Bear R Forearm
-    400070: Bear R Hand
-    400072: Bear R Lower Eyelid
-    400074: Bear R Lower Mouth
-    400076: Bear R Mouth
-    400078: Bear R Thigh
-    400080: Bear R Toe0
-    400082: Bear R Upper Eyelid
-    400084: Bear R Upper Mouth
-    400086: Bear R UpperArm
-    400088: Bear Spine
-    400090: Bear Spine1
-    400092: Bear Spine2
-    400094: Bear Tail
-    400096: Bear Tongue
-    400098: Bear Tongue02
-    400100: Bear Tongue03
-    2100000: Bear
-    2300000: //RootNode
-    2300002: Bear Mesh
-    2300004: Eye Left
-    2300006: Eye Right
-    3300000: //RootNode
-    3300002: Bear Mesh
-    3300004: Eye Left
-    3300006: Eye Right
-    4300000: Bear Mesh
-    4300002: Eye Right
-    4300004: Eye Left
-    7400000: Take 001
-    9500000: //RootNode
-    13700000: Bear Mesh
+  serializedVersion: 19300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: Bear Mesh
+  - first:
+      1: 100004
+    second: Eye Left
+  - first:
+      1: 100006
+    second: Eye Right
+  - first:
+      1: 100008
+    second: Bear
+  - first:
+      1: 100010
+    second: Bear Head
+  - first:
+      1: 100012
+    second: Bear Jaw
+  - first:
+      1: 100014
+    second: Bear L Calf
+  - first:
+      1: 100016
+    second: Bear L Clavicle
+  - first:
+      1: 100018
+    second: Bear L Ear
+  - first:
+      1: 100020
+    second: Bear L Eyebrow
+  - first:
+      1: 100022
+    second: Bear L Finger0
+  - first:
+      1: 100024
+    second: Bear L Finger1
+  - first:
+      1: 100026
+    second: Bear L Foot
+  - first:
+      1: 100028
+    second: Bear L Forearm
+  - first:
+      1: 100030
+    second: Bear L Hand
+  - first:
+      1: 100032
+    second: Bear L Lower Eyelid
+  - first:
+      1: 100034
+    second: Bear L Lower Mouth
+  - first:
+      1: 100036
+    second: Bear L Mouth
+  - first:
+      1: 100038
+    second: Bear L Thigh
+  - first:
+      1: 100040
+    second: Bear L Toe0
+  - first:
+      1: 100042
+    second: Bear L Upper Eyelid
+  - first:
+      1: 100044
+    second: Bear L Upper Mouth
+  - first:
+      1: 100046
+    second: Bear L UpperArm
+  - first:
+      1: 100048
+    second: Bear Neck
+  - first:
+      1: 100050
+    second: Bear Nose
+  - first:
+      1: 100052
+    second: Bear Pelvis
+  - first:
+      1: 100054
+    second: Bear R Calf
+  - first:
+      1: 100056
+    second: Bear R Clavicle
+  - first:
+      1: 100058
+    second: Bear R Ear
+  - first:
+      1: 100060
+    second: Bear R Eyebrow
+  - first:
+      1: 100062
+    second: Bear R Finger0
+  - first:
+      1: 100064
+    second: Bear R Finger1
+  - first:
+      1: 100066
+    second: Bear R Foot
+  - first:
+      1: 100068
+    second: Bear R Forearm
+  - first:
+      1: 100070
+    second: Bear R Hand
+  - first:
+      1: 100072
+    second: Bear R Lower Eyelid
+  - first:
+      1: 100074
+    second: Bear R Lower Mouth
+  - first:
+      1: 100076
+    second: Bear R Mouth
+  - first:
+      1: 100078
+    second: Bear R Thigh
+  - first:
+      1: 100080
+    second: Bear R Toe0
+  - first:
+      1: 100082
+    second: Bear R Upper Eyelid
+  - first:
+      1: 100084
+    second: Bear R Upper Mouth
+  - first:
+      1: 100086
+    second: Bear R UpperArm
+  - first:
+      1: 100088
+    second: Bear Spine
+  - first:
+      1: 100090
+    second: Bear Spine1
+  - first:
+      1: 100092
+    second: Bear Spine2
+  - first:
+      1: 100094
+    second: Bear Tail
+  - first:
+      1: 100096
+    second: Bear Tongue
+  - first:
+      1: 100098
+    second: Bear Tongue02
+  - first:
+      1: 100100
+    second: Bear Tongue03
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: Bear Mesh
+  - first:
+      4: 400004
+    second: Eye Left
+  - first:
+      4: 400006
+    second: Eye Right
+  - first:
+      4: 400008
+    second: Bear
+  - first:
+      4: 400010
+    second: Bear Head
+  - first:
+      4: 400012
+    second: Bear Jaw
+  - first:
+      4: 400014
+    second: Bear L Calf
+  - first:
+      4: 400016
+    second: Bear L Clavicle
+  - first:
+      4: 400018
+    second: Bear L Ear
+  - first:
+      4: 400020
+    second: Bear L Eyebrow
+  - first:
+      4: 400022
+    second: Bear L Finger0
+  - first:
+      4: 400024
+    second: Bear L Finger1
+  - first:
+      4: 400026
+    second: Bear L Foot
+  - first:
+      4: 400028
+    second: Bear L Forearm
+  - first:
+      4: 400030
+    second: Bear L Hand
+  - first:
+      4: 400032
+    second: Bear L Lower Eyelid
+  - first:
+      4: 400034
+    second: Bear L Lower Mouth
+  - first:
+      4: 400036
+    second: Bear L Mouth
+  - first:
+      4: 400038
+    second: Bear L Thigh
+  - first:
+      4: 400040
+    second: Bear L Toe0
+  - first:
+      4: 400042
+    second: Bear L Upper Eyelid
+  - first:
+      4: 400044
+    second: Bear L Upper Mouth
+  - first:
+      4: 400046
+    second: Bear L UpperArm
+  - first:
+      4: 400048
+    second: Bear Neck
+  - first:
+      4: 400050
+    second: Bear Nose
+  - first:
+      4: 400052
+    second: Bear Pelvis
+  - first:
+      4: 400054
+    second: Bear R Calf
+  - first:
+      4: 400056
+    second: Bear R Clavicle
+  - first:
+      4: 400058
+    second: Bear R Ear
+  - first:
+      4: 400060
+    second: Bear R Eyebrow
+  - first:
+      4: 400062
+    second: Bear R Finger0
+  - first:
+      4: 400064
+    second: Bear R Finger1
+  - first:
+      4: 400066
+    second: Bear R Foot
+  - first:
+      4: 400068
+    second: Bear R Forearm
+  - first:
+      4: 400070
+    second: Bear R Hand
+  - first:
+      4: 400072
+    second: Bear R Lower Eyelid
+  - first:
+      4: 400074
+    second: Bear R Lower Mouth
+  - first:
+      4: 400076
+    second: Bear R Mouth
+  - first:
+      4: 400078
+    second: Bear R Thigh
+  - first:
+      4: 400080
+    second: Bear R Toe0
+  - first:
+      4: 400082
+    second: Bear R Upper Eyelid
+  - first:
+      4: 400084
+    second: Bear R Upper Mouth
+  - first:
+      4: 400086
+    second: Bear R UpperArm
+  - first:
+      4: 400088
+    second: Bear Spine
+  - first:
+      4: 400090
+    second: Bear Spine1
+  - first:
+      4: 400092
+    second: Bear Spine2
+  - first:
+      4: 400094
+    second: Bear Tail
+  - first:
+      4: 400096
+    second: Bear Tongue
+  - first:
+      4: 400098
+    second: Bear Tongue02
+  - first:
+      4: 400100
+    second: Bear Tongue03
+  - first:
+      21: 2100000
+    second: Bear
+  - first:
+      23: 2300000
+    second: //RootNode
+  - first:
+      23: 2300002
+    second: Bear Mesh
+  - first:
+      23: 2300004
+    second: Eye Left
+  - first:
+      23: 2300006
+    second: Eye Right
+  - first:
+      33: 3300000
+    second: //RootNode
+  - first:
+      33: 3300002
+    second: Bear Mesh
+  - first:
+      33: 3300004
+    second: Eye Left
+  - first:
+      33: 3300006
+    second: Eye Right
+  - first:
+      43: 4300000
+    second: Bear Mesh
+  - first:
+      43: 4300002
+    second: Eye Right
+  - first:
+      43: 4300004
+    second: Eye Left
+  - first:
+      74: 7400000
+    second: Take 001
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: Bear Mesh
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -139,7 +371,7 @@ ModelImporter:
       name: Eyes
     second: {fileID: 2100000, guid: 90fe3e91f4b965c42bac69800a96fb0e, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 0
@@ -156,6 +388,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -170,17 +403,22 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
@@ -192,10 +430,13 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human:
     - boneName: Bear Pelvis
       humanName: Hips
@@ -668,14 +909,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 1
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
+  avatarSetup: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
