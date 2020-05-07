@@ -7,7 +7,8 @@
 		_Gloss("Gloss", Range(8, 200)) = 50
 	}
 	SubShader {
-		Tags {"Queue" = "Geometry" "IgnoreProjector" = "True" "RenderPipeline" = "UniversalRenderPipeline"}
+		Tags {"RenderType" = "Opaque" "IgnoreProjector" = "True" "RenderPipeline" = "UniversalRenderPipeline"}
+		LOD 200
 		Pass {
 			Name "LBP"
 			Tags {"LightMode" = "UniversalForward"}
@@ -131,10 +132,10 @@
 				// mix maintexColor with lightmapColor
 				half3 finalColor = min(half3(1, 1, 1), mainTex.rgb * mixedRealtimeShadowWithLightmap + mainTex.rgb * spec);
 				return half4(finalColor, 1);
+				//return half4(0, 0, 0, 1);
 			}
-
 			ENDHLSL
 		}
-
+		UsePass "Universal Render Pipeline/Lit/DepthOnly"
 	}
 }

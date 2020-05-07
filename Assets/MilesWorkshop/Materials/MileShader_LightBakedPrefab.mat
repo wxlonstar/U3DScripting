@@ -84,7 +84,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EmissionIntensity: 0
-    - _Gloss: 63
+    - _Gloss: 12
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossinessSource: 0
@@ -113,4 +113,4 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FakeHalfDir: {r: 0, g: 1, b: -0.25, a: 0}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 0}
-    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularColor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
