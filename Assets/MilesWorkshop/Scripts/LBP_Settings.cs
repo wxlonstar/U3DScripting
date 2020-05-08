@@ -25,7 +25,9 @@ namespace MileCode {
             if(propBlock != null) {
                 renderer.GetPropertyBlock(propBlock);
                 propBlock.SetVector("_Lightmap_ST", lightmapScaleAndOffset);
-                propBlock.SetTexture("_Lightmap", lightmap);
+                if(lightmap != null) {
+                    propBlock.SetTexture("_Lightmap", lightmap);
+                }
                 renderer.SetPropertyBlock(propBlock);
             }
         }
