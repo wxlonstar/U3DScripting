@@ -3,7 +3,6 @@ using UnityEditor;
 using System.Collections;
 using Boo.Lang;
 using System;
-using AmplifyShaderEditor;
 using MileCode;
 using NUnit.Framework.Internal;
 
@@ -32,6 +31,7 @@ namespace MileCode {
             GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("LBP");
             if(gameObjects.Length <= 0) {
                 Debug.Log("Can't find gameObjects with the tag(LBP)");
+                return;
             } else {
                 Debug.LogWarning(gameObjects.Length + " LBP Tags.");
             }
@@ -46,6 +46,8 @@ namespace MileCode {
                     if(CanUseLBPSettings(meshRenderers)) {
                         MakeLBP(go);
                     }
+                } else {
+                    Debug.Log(go.name + " is not static, LBP workflow skipped.");
                 }
             }
             //Lightmapping.Clear();
