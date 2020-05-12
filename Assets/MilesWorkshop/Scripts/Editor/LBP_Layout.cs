@@ -34,8 +34,6 @@ namespace MileCode {
 
         static void AllInPosition(GameObject[] gos, int LayoutNumber) {
             Queue<GameObject> GoQueue = new Queue<GameObject>(gos);
-            //Debug.Log(GoQueue.Count);
-            
             if(LayoutNumber == 1) {
                 // don't have to layout if there's only one object
                 return;
