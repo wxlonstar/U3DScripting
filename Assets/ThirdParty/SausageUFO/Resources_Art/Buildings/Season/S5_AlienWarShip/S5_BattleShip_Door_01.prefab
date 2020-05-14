@@ -18,7 +18,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967294
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &742263121068454475
 Transform:
@@ -59,7 +59,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
-  m_TrickSWOccludee: 0
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -71,6 +71,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -141,7 +142,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 08daedfef1c45024e900315bb9441c6d, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 4294967294
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 08daedfef1c45024e900315bb9441c6d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -228,6 +229,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 742263121068454475}
     m_Modifications:
+    - target: {fileID: 100000, guid: 7d43b16efdbc4fd45ac9c50987e5dbd4, type: 3}
+      propertyPath: m_Name
+      value: S5_BattleShip_Door_01_Lod1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 7d43b16efdbc4fd45ac9c50987e5dbd4, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 7d43b16efdbc4fd45ac9c50987e5dbd4, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
@@ -272,14 +281,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 7d43b16efdbc4fd45ac9c50987e5dbd4, type: 3}
-      propertyPath: m_Name
-      value: S5_BattleShip_Door_01_Lod1
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 7d43b16efdbc4fd45ac9c50987e5dbd4, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967294
-      objectReference: {fileID: 0}
     - target: {fileID: 2300000, guid: 7d43b16efdbc4fd45ac9c50987e5dbd4, type: 3}
       propertyPath: m_LightProbeUsage
       value: 0
@@ -321,33 +322,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 742263121068454475}
     m_Modifications:
-    - target: {fileID: 2300000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
-      propertyPath: m_LightProbeUsage
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
-      propertyPath: m_ReflectionProbeUsage
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
-      propertyPath: m_DynamicOccludee
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
-      propertyPath: m_TrickSWOccludee
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 9d0e6a48bdc084f49a80f6aa88de09d1, type: 2}
     - target: {fileID: 100000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
       propertyPath: m_Name
       value: S5_BattleShip_Door_01_Lod3
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 4294967294
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -393,6 +374,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
+      propertyPath: m_ReflectionProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
+      propertyPath: m_TrickSWOccludee
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9d0e6a48bdc084f49a80f6aa88de09d1, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6afa4e93157f5ec4c915362668f743a8, type: 3}
 --- !u!4 &8190592022926886310 stripped

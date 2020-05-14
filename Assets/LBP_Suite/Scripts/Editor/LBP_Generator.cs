@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
-using Boo.Lang;
 using System;
 using MileCode;
-using NUnit.Framework.Internal;
+using System.Collections.Generic;
 
 namespace MileCode {
     public class LBP_Generator : EditorWindow {
-        static string LBPFolder = "Assets/MilesWorkshop/Prefabs/LBP/";
-        static string LBPMaterialsFolder = "Assets/MilesWorkshop/Materials/LBP_Materials/";
+        static string LBPFolder = "Assets/LBP_Suite/Prefabs/LBP/";
+        static string LBPMaterialsFolder = "Assets/LBP_Suite/Materials/LBP_Materials/";
         static Shader LBPShader;
         [MenuItem("Lightmap/LBP/Generate")]
         public static void GenerateLBP() {
@@ -21,12 +20,6 @@ namespace MileCode {
             FetchGameObjects();
         }
 
-        static void Test(string matName) {
-            Material mat = new Material(LBPShader);
-            mat.name = matName;
-            AssetDatabase.CreateAsset(mat, LBPMaterialsFolder + mat.name + ".mat");
-        }
-
         static void FetchGameObjects() {
             GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("LBP");
             if(gameObjects.Length <= 0) {
@@ -35,27 +28,31 @@ namespace MileCode {
             } else {
                 Debug.LogWarning(gameObjects.Length + " LBP Tags.");
             }
-            FindPotentialLBP(gameObjects);
+            FindPotentialLBP2(gameObjects);
         }
 
-        static void FindPotentialLBP(GameObject[] gameObjects) {
+        static void FindPotentialLBP2(GameObject[] gameObjects) {
             foreach(GameObject go in gameObjects) {
-                if(go.isStatic) {
-                    Debug.Log(go.name + " is static. ");
-                    MeshRenderer[] meshRenderers = go.GetComponentsInChildren<MeshRenderer>();
-                    if(CanUseLBPSettings(meshRenderers)) {
-                        MakeLBP(go);
-                    }
+                //List<MeshRenderer> meshRenderers = new List<MeshRenderer>();
+                /*
+                MeshRenderer rootRender = go.GetComponent<MeshRenderer>();
+                if(rootRender != null) {
+                    meshRenderers.Add(rootRender);
+                }
+                */
+                MeshRenderer[] childrenRenders = go.GetComponentsInChildren<MeshRenderer>();
+                //meshRenderers.AddRange(childrenRenders);
+                if(CanUseLBPSettings2(childrenRenders)) {
+                    MakeLBP(go);
                 } else {
-                    Debug.Log(go.name + " is not static, LBP workflow skipped.");
+                    Debug.Log("Mesh renderer is not available for LBP Settings.");
                 }
             }
-            //Lightmapping.Clear();
         }
 
-        static bool CanUseLBPSettings(MeshRenderer[] meshRenders) {
-            bool enableLBP = true;
-            foreach(MeshRenderer mr in meshRenders) {
+        static bool CanUseLBPSettings2(MeshRenderer[] meshRenderers) {
+            bool enableLBP = false;
+            foreach(MeshRenderer mr in meshRenderers) {
                 if(mr.lightmapIndex >= 0) {
                     LBP_Settings lbpSettings = mr.GetComponent<LBP_Settings>();
                     if(lbpSettings == null) {
@@ -66,10 +63,9 @@ namespace MileCode {
                     Texture2D sceneLightmap = FetchCurrentLightmap(mr.lightmapIndex);
                     lbpSettings.lightmap = sceneLightmap;
                     PrepareLBPMaterial(mr);
+                    enableLBP = true;
                 } else {
-                    enableLBP = false;
-                    Debug.LogError(mr.gameObject.name + "(static) doesn't have lightmap enabled, LBP can't be generated.");
-                    break;
+                    Debug.LogWarning(mr.gameObject.name + "(static) doesn't have lightmap enabled, LBP can't be generated for this part.");
                 }
             }
             return enableLBP;
@@ -78,6 +74,9 @@ namespace MileCode {
         static void PrepareLBPMaterial(MeshRenderer mr) {
             foreach(Material mat in mr.sharedMaterials) {
                 //Texture mainTexture = mat.GetTexture("_MainTex");
+                if(mat.name.EndsWith("_LBP")) {
+                    mat.name = mat.name.Replace("_LBP", "");
+                }
                 string LBPMatName = mat.name + "_LBP";
                 Material lbpMat = AssetDatabase.LoadAssetAtPath<Material>(LBPMaterialsFolder + LBPMatName + ".mat");
                 if(lbpMat == null) {

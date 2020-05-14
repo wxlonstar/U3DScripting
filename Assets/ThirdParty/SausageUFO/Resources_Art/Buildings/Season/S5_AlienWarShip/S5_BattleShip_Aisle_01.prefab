@@ -18,7 +18,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967294
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &7695798678037818291
 Transform:
@@ -60,7 +60,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
-  m_TrickSWOccludee: 0
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -72,6 +72,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -139,11 +140,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7695798678037818291}
     m_Modifications:
-    - target: {fileID: 3528792166785385180, guid: f28e31dc0665d6441bb66883f7e266db,
-        type: 3}
-      propertyPath: m_Name
-      value: S5_BattleShip_Windows_01
-      objectReference: {fileID: 0}
     - target: {fileID: 3528792166785294076, guid: f28e31dc0665d6441bb66883f7e266db,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -199,6 +195,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3528792166785385180, guid: f28e31dc0665d6441bb66883f7e266db,
+        type: 3}
+      propertyPath: m_Name
+      value: S5_BattleShip_Windows_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3528792166785385180, guid: f28e31dc0665d6441bb66883f7e266db,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f28e31dc0665d6441bb66883f7e266db, type: 3}
 --- !u!4 &3791111102201221473 stripped
@@ -226,7 +232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: d52f281e9b697a247b7a8dea7cffc98f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 4294967294
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d52f281e9b697a247b7a8dea7cffc98f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -319,7 +325,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: b1350ea65370ac24886909e4470394ed, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 4294967294
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b1350ea65370ac24886909e4470394ed, type: 3}
       propertyPath: m_LocalPosition.x
@@ -412,7 +418,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: ce2d55421fa375845858f8bca0fe5861, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 4294967294
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ce2d55421fa375845858f8bca0fe5861, type: 3}
       propertyPath: m_LocalPosition.x
