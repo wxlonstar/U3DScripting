@@ -15,6 +15,8 @@
             "."
         ],
         "fbxSavePaths": [
+            "ThirdParty/SausageUFO/Models/DemoResource",
+            "ThirdParty/SausageUFO/Terrain10",
             "."
         ],
         "selectedFbxPath": 0,
