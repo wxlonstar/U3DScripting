@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -25,6 +26,8 @@ namespace MileCode {
             LightmapEditorSettings.bakeResolution = 20;
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Skybox;
             Debug.Log(LightmapEditorSettings.lightmapper.ToString());
+            RenderSettings.subtractiveShadowColor = Color.gray;
+            //MixedLightingMode.Subtractive;
         }
     }
 }
