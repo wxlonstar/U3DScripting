@@ -177,7 +177,7 @@
 
 			half4 frag(v2f i) : SV_Target {
 				GetFogFactor(0);
-				return half4(0, 1, 0, 1);
+				return _Color;
 			}
 
 			ENDHLSL
