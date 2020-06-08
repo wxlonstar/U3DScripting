@@ -1,12 +1,9 @@
 ﻿Shader "MileShader/MilesVolumeBox" {
 	Properties {
-		_Color("Color", COLOR) = (1, 1, 1, 1)
-		[NoScaleOffset]_MainTex("Gradient Map", 2D) = "white" {}
-
+		[HDR]_Color("Color", COLOR) = (1, 1, 1, 1)
 		_Lower("Lower", Range(0, 1)) = 0
 		_Upper("Upper", Range(0, 4)) = 1
 
-		[Toggle(_GRADIENTON)]_GradientOn("Gradient On", FLOAT) = 0
 		[Toggle(_ORTHOVIEW)]_OrthoView("Ortho View", FLOAT) = 0
 		[Toggle(_USEFOG)]_UseFog("Use Fog", FLOAT) = 0
 		[Enum(UnityEngine.Rendering.CompareFunction)]_ZTest("ZTest", Int) = 8
@@ -28,7 +25,6 @@
             #pragma exclude_renderers d3d11_9x
             #pragma target 2.0
 
-			#pragma shader_feature_local _GRADIENTON
 			#pragma shader_feature_local _USEFOG
 			#pragma shader_feature_local _ORTHOVIEW
 
@@ -51,11 +47,6 @@
 				half _Upper;
 			CBUFFER_END
 
-			#if defined(_GRADIENTON)
-				TEXTURE2D(_MainTex);			SAMPLER(sampler_MainTex);
-				//sampler2D _MainTex;
-			#endif
-
 			#if defined(SHADER_API_GLES)
                 TEXTURE2D(_CameraDepthTexture); SAMPLER(sampler_CameraDepthTexture);
             #else
@@ -63,11 +54,7 @@
 			#endif
 
 			float4 _CameraDepthTexture_TexelSize;
-			/*
-			#ifndef INTRINSIC_MINMAX3
-				TEMPLATE_3_REAL(Max3, a, b, c, return max(max(a, b), c));
-			#endif
-			*/
+
 			struct a2v {
 				float4 vertex: POSITION;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -140,11 +127,14 @@
 					o.fogCoord = ComputeFogFactor(o.positionCS.z);
 				#endif
 
-				float4 positionVS = mul(UNITY_MATRIX_MV, v.vertex);
+				//float4 positionVS = mul(UNITY_MATRIX_MV, v.vertex);
+
+				float3 positionVS = vpi.positionVS;
 				float3 viewRayVS = positionVS.xyz;
 
 				float4x4 ViewToObjectMatrix = mul(GetWorldToObjectMatrix(), UNITY_MATRIX_I_V);
 				o.viewRayOS.xyz = mul((float3x3)ViewToObjectMatrix, -viewRayVS).xyz;
+				o.viewRayOS.w = positionVS.z;
 				return o;
 			}
 
@@ -168,16 +158,82 @@
 				#endif
 				return lerp(_ProjectionParams.y, _ProjectionParams.z, rawDepth);
 			}
-
+			
 			inline float GetProperEyeDepth(float rawDepth) {
 				#if defined(_ORTHOVIEW)
+					float perspSceneDepth = LinearEyeDepth(rawDepth, _ZBufferParams);
+					float orthoSceneDepth = GetOrthoDepthFromZBuffer(rawDepth);
+					return lerp(perspSceneDepth, orthoSceneDepth, unity_OrthoParams.w);
 				#else
+					return LinearEyeDepth(rawDepth, _ZBufferParams);
 				#endif
 			}
-
+			
 			half4 frag(v2f i) : SV_Target {
-				GetFogFactor(0);
-				return _Color;
+				UNITY_SETUP_INSTANCE_ID(i);
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
+
+				half4 color = half4(1, 1, 1, 0);
+				
+				float3 rayDir = i.viewRayOS.xyz / i.viewRayOS.w;
+				float3 rayStart = i.cameraPosOS;
+			
+
+				float2 screenUV = i.positionPS.xy / i.positionCS.w;
+				
+				#if defined(UNITY_SINGLE_PASS_STEREO)
+					screenUV.x = screenUV.x * 0.5f + (float)unity_StereoEyeIndex * 0.5f;
+				#endif
+
+				
+
+				#if defined(SHADER_API_GLES)
+					float sceneZ = SAMPLE_DEPTH_TEXTURE_LOD(_CameraDepthTexture, sampler_CameraDepthTexture, screenUV, 0);
+				#else
+					float sceneZ = LOAD_TEXTURE2D_X(_CameraDepthTexture, _CameraDepthTexture_TexelSize.zw * screenUV).x;
+				#endif
+				sceneZ = GetProperEyeDepth(sceneZ);
+
+				
+
+				float near;
+				float far;
+				// out near, out far
+				float thickness = IntersectRayBox(rayStart, rayDir, near, far);
+
+				
+
+				float3 entryOS = rayStart + rayDir * near;
+				float distanceToEntryOS = length(entryOS - i.cameraPosOS);
+
+				
+
+				float sceneDistanceOS = length(sceneZ * rayDir);
+				float sceneToEntry = sceneDistanceOS - distanceToEntryOS;
+
+				clip(sceneToEntry);
+				
+				float3 exitOS = rayStart + rayDir * far;
+
+				float maxTravel = distance(exitOS, entryOS);
+				float denom = min(sceneToEntry, maxTravel);
+				float percentage = maxTravel / denom;
+
+				percentage = rcp(percentage);
+
+				float alpha = thickness * i.scale * percentage;
+
+				alpha = smoothstep(_Lower, _Upper, alpha);
+
+				color.a = saturate(alpha);
+
+				color *= _Color;
+
+				#if defined(_USEFOG)
+					color.rgb = MixFog(color.rgb, i.fogCoord);
+				#endif
+
+				return color;
 			}
 
 			ENDHLSL

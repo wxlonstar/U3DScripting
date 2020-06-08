@@ -244,27 +244,30 @@
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
                 
                 half4 color = half4(1,1,1,0);
-    
+                
                 float3 rayDir = input.viewRayOS.xyz / input.viewRayOS.w;
                 float3 rayStart = input.cameraPositionOS;
-
+                
                 float2 screenUV = input.projectedPosition.xy / input.positionCS.w;
-
+                
             //  Fix screenUV for Single Pass Stereo Rendering
                 #if defined(UNITY_SINGLE_PASS_STEREO)
                     screenUV.x = screenUV.x * 0.5f + (float)unity_StereoEyeIndex * 0.5f;
                 #endif
+                
 
                 #if defined(SHADER_API_GLES)
                     float sceneZ = SAMPLE_DEPTH_TEXTURE_LOD(_CameraDepthTexture, sampler_CameraDepthTexture, screenUV, 0);
                 #else
                     float sceneZ = LOAD_TEXTURE2D_X(_CameraDepthTexture, _CameraDepthTexture_TexelSize.zw * screenUV).x;
                 #endif
-                sceneZ = GetProperEyeDepth(sceneZ);
+                sceneZ = GetProperEyeDepth(sceneZ);    
             
                 float near;
                 float far;
                 float thickness = IntersectRayBox(rayStart, rayDir, near, far);
+
+                //return half4(far, far, far, 1);
 
             //  Entry point in object space
                 float3 entryOS = rayStart + rayDir * near;
@@ -283,7 +286,9 @@
                 float denom = min(sceneToEntry, maxTravel);
                 float percentage = maxTravel / denom;
 
+
                 percentage = rcp(percentage);
+
 
                 float alpha = thickness * input.scale * percentage;
 
@@ -296,7 +301,8 @@
                 color.a = saturate(alpha);
 
                 #if defined(_ENABLEGRADIENT)
-                    color.rgb = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, float2(input.positionOS_scale.y, 0)).rgb;
+                    //color.rgb = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, float2(input.positionOS_scale.y, 0)).rgb;
+                    color.rgb = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, float2(input.scale, 0)).rgb;
                 #endif
 
                 color *= _Color;

@@ -1,0 +1,180 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: mtl_water
+  m_Shader: {fileID: 4800000, guid: d9b493df57097d24abf26c498f418cc8, type: 3}
+  m_ShaderKeywords: _CULL_ON _DEBUG_ALL _ISSKYBOX_OFF _MODE_VECTEXCOLOR
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _CausticsTex:
+        m_Texture: {fileID: 2800000, guid: 2640a891180995b4fb72ce8d2712cb83, type: 3}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    - _ColorGradient:
+        m_Texture: {fileID: 2800000, guid: 47c766ee7fd556c41b3f6b4593b47235, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CubeMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CubeTex:
+        m_Texture: {fileID: 8900000, guid: f93a955ff54ca3a469c67be4104772c6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DirTex:
+        m_Texture: {fileID: 2800000, guid: 3d7ffd21952827f4b883425eb9272e1e, type: 3}
+        m_Scale: {x: 0.3, y: 0.3}
+        m_Offset: {x: 0, y: 0}
+    - _DistortionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamDetailTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamMainTex:
+        m_Texture: {fileID: 2800000, guid: 7a0c5fd0c40b3264a81c72b4cacd180b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamTex:
+        m_Texture: {fileID: 2800000, guid: 27f483a772c80434da8caefa7102fd2b, type: 3}
+        m_Scale: {x: 5000, y: 300}
+        m_Offset: {x: 0, y: 0}
+    - _FromDetailTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    - _FromMainTex:
+        m_Texture: {fileID: 2800000, guid: 7a0c5fd0c40b3264a81c72b4cacd180b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Gradient:
+        m_Texture: {fileID: 2800000, guid: 47c766ee7fd556c41b3f6b4593b47235, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GradualTex:
+        m_Texture: {fileID: 2800000, guid: bc27ff25c4f124d4ebc1eaac39ae8d76, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: b7af8644212d2194a8dfacdc7a1a751b, type: 3}
+        m_Scale: {x: 0.3, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 2800000, guid: a0c5367e7f419ff4cb41727ea57dbdd8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OceanTex:
+        m_Texture: {fileID: 2800000, guid: d077f1263851f9f41aa0d4ebb7721ff0, type: 3}
+        m_Scale: {x: 5, y: 5}
+        m_Offset: {x: 0, y: 0}
+    - _Sky:
+        m_Texture: {fileID: 8900000, guid: 768f33b5d33d8d04080044206825b414, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _WaveDetailTex:
+        m_Texture: {fileID: 2800000, guid: b63ca260f0e7b8146acd0e943598a415, type: 3}
+        m_Scale: {x: 3, y: 3}
+        m_Offset: {x: 0, y: 0}
+    - _WaveMask:
+        m_Texture: {fileID: 2800000, guid: bc27ff25c4f124d4ebc1eaac39ae8d76, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _WaveTex:
+        m_Texture: {fileID: 2800000, guid: df8b8c9e5632cf14f982d841ae97782d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _aoTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _test:
+        m_Texture: {fileID: 2800000, guid: 325a78dea9d820246a0910a037117d87, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _CULL: 1
+    - _ColorRange: 1
+    - _Cull: 0
+    - _Debug: 0
+    - _DepthMaxDistance: 6
+    - _DepthMinDistance: 1.5
+    - _DissolveRange: 0.7
+    - _FadeOut: 0.55
+    - _FadeOutRange: 0.5
+    - _Far: 600
+    - _FoamDistance: 0.33
+    - _FoamMoveDistance: 1.5
+    - _FoamWidth: 6
+    - _Fresnel: 3.04
+    - _FromMoveDistance: 3.1
+    - _Gloss: 1
+    - _GradientDistance: 12
+    - _Mode: 0
+    - _Near: 47.4
+    - _NoiseCutoff: 1
+    - _NoiseRange: 1.3
+    - _NormalScale: 0.2
+    - _PlayerFoamMoveDistance: 0.6
+    - _PlayerFoamWidth: 4
+    - _RefractRatio: 0.5
+    - _Refraction: 7.24
+    - _ShakeDis: 3
+    - _ShakeSpeed: 0.06
+    - _ShakeStep: 3
+    - _ShakeTime: 0.07
+    - _Shininess: 0.1
+    - _SineHeight: 0.51
+    - _SineLength: 1.12
+    - _SineNoise: 0.17
+    - _Specular: 88.3
+    - _TotalScale: 1001
+    - _VertexHeight: 0.005
+    - _VertexLength: 13.75
+    - _WaveNoise: 2.46
+    - _WaveParams: -1
+    - _WaveRange: 0.24
+    - _WaveSpeed: 12
+    - _WaveStep: 8
+    - _WaveTime: 0.06
+    - _WindSpeed: 1.2
+    - _isSkyBox: 0
+    - _test: 0.18
+    - test: 0.77
+    m_Colors:
+    - CullCol: {r: 0.099368125, g: 0.38027796, b: 0.7264151, a: 1}
+    - _BlendCol: {r: 0.41568628, g: 0.83137256, b: 0.972549, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _CullCol: {r: 0.1019, g: 0.38, b: 0.73, a: 1}
+    - _FarColor: {r: 0, g: 0, b: 0.8, a: 1}
+    - _FoamColor: {r: 0.8443396, g: 0.95430696, b: 1, a: 0.6431373}
+    - _FoamParams: {r: 6.14, g: -0.5, b: 1.15, a: 20}
+    - _LightDir: {r: -0.26, g: -9.25, b: 7.96, a: 2.54}
+    - _LightDir1: {r: 0, g: 0, b: 0, a: 0}
+    - _NearColor: {r: 0, g: 0, b: 0.3, a: 0}
+    - _PlayerFoamColor: {r: 0.20545568, g: 0.5103614, b: 0.5377358, a: 1}
+    - _SpecColor: {r: 2.270603, g: 2.270603, b: 2.270603, a: 1}
+    - _Speed: {r: 6.79, g: 4.88, b: 0, a: 0}
+    - _Spoondrift: {r: 3.45, g: -0.73, b: 1.15, a: 33.16}
+    - _Wave: {r: 1.53, g: 2.48, b: 0, a: 0}
+    - _WaveParams: {r: 0.2, g: 0, b: 0, a: 0}
+    - _lightDir: {r: -0.66, g: 1.87, b: -0.09, a: 1}
