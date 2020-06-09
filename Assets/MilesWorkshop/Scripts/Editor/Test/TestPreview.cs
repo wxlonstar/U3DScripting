@@ -13,24 +13,40 @@ public class TestPreview : EditorWindow {
     static void ShowWindow() {
         GetWindowWithRect<TestPreview>(new Rect(0, 0, 1024, 1024));
     }
-
+    
     void OnGUI() {
         gameObject = (GameObject)EditorGUILayout.ObjectField(gameObject, typeof(GameObject), true);
-        Debug.Log(gameObject.name);
-        
+        GUIStyle bgColor = new GUIStyle();
+        bgColor.normal.background = EditorGUIUtility.whiteTexture;
+        if(gameObject != null) {
+            if(gameObjectEditor == null) {
+                gameObjectEditor = Editor.CreateEditor(gameObject);
+                gameObjectEditor.DrawHeader();
+                gameObjectEditor.OnInteractivePreviewGUI(GUILayoutUtility.GetRect(1024, 1024), bgColor);
+            }
+            
+            //Debug.Log(gameObjectEditor.target.name);
+        }
+        /*
         GUIStyle bgColor = new GUIStyle();
         bgColor.normal.background = EditorGUIUtility.whiteTexture;
 
         if(gameObject != null) {
             
             if(gameObjectEditor == null) {
+
                 gameObjectEditor = Editor.CreateEditor(gameObject);
-                Debug.Log(gameObjectEditor.name);
             }
-                
+
+            gameObjectEditor.DrawHeader();
 
             gameObjectEditor.OnInteractivePreviewGUI(GUILayoutUtility.GetRect(1024 , 1024), bgColor);
+
+
         }
+        */
+        
         
     }
+    
 }

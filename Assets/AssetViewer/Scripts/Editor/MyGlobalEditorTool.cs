@@ -21,7 +21,7 @@ public class MyGlobalEditorTool : EditorTool {
         testToolBarGUI = new GUIContent() {
             image = toolbarIconImage,
             text = "A new name",
-            tooltip = "2 new name"
+            tooltip = "Miles added this button"
         };
     }
 

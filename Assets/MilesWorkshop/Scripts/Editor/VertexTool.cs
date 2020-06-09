@@ -8,7 +8,7 @@ using System.Linq;
 
 //[EditorTool("Show Vertices", typeof(MeshFilter))]
 public class VertexTool : EditorTool {
-    /*
+    
     struct TransformAndPositions {
         public Transform transform;
         public Vector3[] positions;
@@ -52,7 +52,19 @@ public class VertexTool : EditorTool {
         EditorTools.activeToolChanged -= ActiveToolDidChange;
     }
 
+
+    GameObject lightGroup;
+
     public override void OnToolGUI(EditorWindow window) {
+        Debug.Log("yo");
+        if(lightGroup == null) {
+            lightGroup = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/AssetViewer/Prefabs/LightGroup.prefab");
+            Instantiate(lightGroup);
+        }
+        
+
+
+        /*
         var evt = Event.current;
         if(evt.type == EventType.Repaint) { 
             var zTest = Handles.zTest;
@@ -65,6 +77,7 @@ public class VertexTool : EditorTool {
             }
             Handles.zTest = zTest;
         }
+        */
     }
-    */
+    
 }

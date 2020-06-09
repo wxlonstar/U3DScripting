@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.EditorTools;
 
-[EditorTool("Platform Tool")]
+//[EditorTool("Platform Tool")]
 public class SceneViewTool : EditorTool {
     [SerializeField]
     Texture2D m_ToolIcon;
