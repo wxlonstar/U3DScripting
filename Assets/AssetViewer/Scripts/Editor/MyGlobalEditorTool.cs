@@ -6,7 +6,7 @@ using UnityEditor.EditorTools;
 
 
 // this tool button will be accesible through the top left toolbar in the editor
-[EditorTool("MyGlobalTool")]
+//[EditorTool("MyGlobalTool")]
 public class MyGlobalEditorTool : EditorTool {
     // this image must must be assgined in OnEnable function, icon will be seen when this tool is activated.
     [SerializeField]

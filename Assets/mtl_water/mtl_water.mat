@@ -20,7 +20,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _CausticsTex:
-        m_Texture: {fileID: 2800000, guid: 2640a891180995b4fb72ce8d2712cb83, type: 3}
+        m_Texture: {fileID: 2800000, guid: 5a921dba240dd8d4cbc1616d609ff388, type: 3}
         m_Scale: {x: 2, y: 2}
         m_Offset: {x: 0, y: 0}
     - _ColorGradient:

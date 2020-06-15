@@ -101,10 +101,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4343025513012094961}
+  - component: {fileID: 8236288042125306005}
   m_Layer: 0
   m_Name: LightGroup
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -125,6 +126,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8236288042125306005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4343025513012094966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42aa720d143cee54e8f03c84594c2f95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0.22014178, g: 0.9716981, b: 0, a: 0}
 --- !u!1 &4343025514004576959
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ using UnityEngine.Rendering;
 using UnityEditor;
 using UnityEditor.EditorTools;
 
-[EditorTool("Light Group", typeof(MeshRenderer))]
+//[EditorTool("Light Group", typeof(MeshRenderer))]
 public class LightGroup : EditorTool {
     GUIContent m_ToolbarIcon;
     GUIContent Slider;
@@ -41,7 +41,7 @@ public class LightGroup : EditorTool {
 
     private void OnDisable() {
         EditorTools.activeToolChanged -= ActiveToolDidChange;
-        Debug.Log("Disable");
+        //Debug.Log("Disable");
     }
 
 }
