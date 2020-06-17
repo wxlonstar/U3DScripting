@@ -38,15 +38,7 @@ public class MyGlobalEditorTool : EditorTool {
         using(new Handles.DrawingScope(Color.green)) {
             //position = Handles.Slider(position, Vector3.right);
         }
-        /*
-        if(EditorGUI.EndChangeCheck()) {
-            Vector3 delta = position - Tools.handlePosition;
-            Undo.RecordObjects(Selection.transforms, "My Oh My");
-            foreach(var transform in Selection.transforms) {
-                transform.position += delta;
-            }
-        }
-        */
+
     }
 
 }
