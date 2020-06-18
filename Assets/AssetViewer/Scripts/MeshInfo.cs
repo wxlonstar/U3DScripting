@@ -114,6 +114,21 @@ namespace MileCode {
             
         }
 
+        public Dictionary<string, string> GetTexturesNamesInUse() {
+            Dictionary<string, string> textureNames = new Dictionary<string, string>();
+            if(defaultMaterial == null) {
+                return textureNames;
+            }
+            string[] textureVarNames = defaultMaterial.GetTexturePropertyNames();
+            foreach(string textureVarName in textureVarNames) {
+                Texture textureFileName = defaultMaterial.GetTexture(textureVarName);
+                if(textureFileName != null) {
+                    textureNames.Add(textureVarName, textureFileName.name);
+                }
+            }
+            return textureNames;
+        }
+
         public List<string> FetchMaterialTextureNames() {
 
             List<string> textureNamesInUse = new List<string>();
@@ -151,6 +166,12 @@ namespace MileCode {
             }
         }
 
+        public string GetShaderName() {
+            if(defaultMaterial != null) {
+                return defaultMaterial.shader.name;
+            }
+            return "Shader not found";
+        }
 
         public void ResetMesh() {
             if(this.meshRenderer != null) {

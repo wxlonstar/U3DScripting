@@ -7,7 +7,7 @@ namespace MileCode {
     [CustomEditor(typeof(MeshInfo))]
     public class MeshInfoEditor : Editor {
         private void OnEnable() {
-            Debug.Log("Checking..");
+            //Debug.Log("Checking..");
         }
 
         private void OnDisable() {
@@ -50,33 +50,21 @@ namespace MileCode {
                         mi.TillingTexture(mi.textureTilling);
                         GUILayout.Space(15);
                         GUILayout.Label("Material Name: " + mi.GetDefaultMaterialName());
+                        GUILayout.Label("Shader Name: " + mi.GetShaderName());
                         GUILayout.Label("Textures In Use: ");
-                        
-                        List<string> textureNames = mi.FetchMaterialTextureNames();
-                        if(textureNames.Count >= 1) {
+                        Dictionary<string, string> texturesInfo = mi.GetTexturesNamesInUse();
+                        if(texturesInfo.Count >= 1) {
                             GUILayout.BeginVertical();
-                            /*
-                            for(int i = 0; i < textureNames.Count; i++) {
-                                //string fixedName = textureNames[i].Split('_')[1];
-                                string fixedName = textureNames[i];
-                                if(GUILayout.Button(fixedName, GUILayout.Width(90))) {
-                                    mi.CheckMap(textureNames[i]);
+                            foreach(string textureVarName in texturesInfo.Keys) {
+                                string textureFileName = texturesInfo[textureVarName];
+                                if(GUILayout.Button(textureFileName, GUILayout.Width(290))) {
+                                    mi.CheckMap(textureVarName);
                                 }
-                                if((i + 1) % 3 == 0) {
-                                    GUILayout.EndHorizontal();
-                                    GUILayout.BeginHorizontal();
-                                }
-                            }
-                            */
-                            for(int i = 0; i < textureNames.Count; i++) {
-                                string fixedName = textureNames[i];
-                                if(GUILayout.Button(fixedName, GUILayout.Width(290))) {
-                                    mi.CheckMap(textureNames[i]);
-                                }
+
                             }
                             GUILayout.EndVertical();
                         }
-                        
+
                     }
                 }
                 GUILayout.EndArea();

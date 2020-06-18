@@ -6,16 +6,15 @@ using UnityEditor;
 using UnityEditor.EditorTools;
 
 namespace MileCode {
-    [EditorTool("Light Group", typeof(MeshInfo))]
-    public class LightGroup : EditorTool {
+    [EditorTool("Mesh Info", typeof(MeshRenderer))]
+    public class MeshInfoTool : EditorTool {
         GUIContent m_ToolbarIcon;
-        GUIContent Slider;
         public override GUIContent toolbarIcon {
             get {
                 if(m_ToolbarIcon == null) {
                     m_ToolbarIcon = new GUIContent(
-                            AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AssetViewer/Textures/Icons/Light-Bulb-icon.png"),
-                            "Light Group"
+                            AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/AssetViewer/Textures/Icons/m_icon.png"),
+                            "Mesh Info"
                         );
                 }
                 return m_ToolbarIcon;
@@ -23,31 +22,57 @@ namespace MileCode {
             }
         }
 
-        GameObject lightGroup;
-    
         void ActiveToolDidChange() {
             if(!EditorTools.IsActiveTool(this)) {
                 return;
             }
-            /*
-            if(lightGroup == null) {
-                lightGroup = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/AssetViewer/Prefabs/LightGroup.prefab");
-                Instantiate(lightGroup);
+            this.AddMeshInfo();
+            //Debug.Log("MeshInfo DidChange");
+        }
+
+        private void AddMeshInfo() {
+            MeshRenderer mr = (MeshRenderer)target;
+            if(mr.GetComponent<MeshInfo>() == null) {
+                mr.gameObject.AddComponent<MeshInfo>();
             }
-            Debug.Log("Changed");
-            */
+        }
+
+        private void RemoveMeshInfo() {
+            MeshRenderer mr = (MeshRenderer)target;
+            MeshInfo mi = mr.GetComponent<MeshInfo>();
+            if(mi != null) {
+                mi.ResetMesh();
+                DestroyImmediate(mi);
+            }
         }
 
         private void OnEnable() {
             EditorTools.activeToolChanged += ActiveToolDidChange;
-
         }
 
         private void OnDisable() {
             EditorTools.activeToolChanged -= ActiveToolDidChange;
+            Debug.Log("MeshInfoTool Disable");
+            this.RemoveMeshInfo();
         }
 
         public override void OnToolGUI(EditorWindow window) {
+            //MeshInfo mi = (MeshInfo)target;
+            /*
+            Handles.BeginGUI();
+            {
+                GUIStyle boxStyle = new GUIStyle("box");
+                GUILayout.BeginArea(new Rect(10, 10, 300, 400), boxStyle);
+                {
+                    GUILayout.Label("Mesh Information");
+              
+
+                }
+                GUILayout.EndArea();
+            }
+            Handles.EndGUI();
+            */
+            /*
             EditorGUI.BeginChangeCheck();
 
             Vector3 position = Tools.handlePosition;
@@ -69,6 +94,7 @@ namespace MileCode {
                 }
                     
             }
+            */
         }
 
     }
