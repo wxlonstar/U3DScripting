@@ -24,6 +24,7 @@ namespace MileCode {
 
         void ActiveToolDidChange() {
             if(!EditorTools.IsActiveTool(this)) {
+                Debug.Log("Not my meshTool.");
                 return;
             }
             this.AddMeshInfo();
@@ -52,7 +53,7 @@ namespace MileCode {
 
         private void OnDisable() {
             EditorTools.activeToolChanged -= ActiveToolDidChange;
-            Debug.Log("MeshInfoTool Disable");
+            //Debug.Log("MeshInfoTool Disable");
             this.RemoveMeshInfo();
         }
 

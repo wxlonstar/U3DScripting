@@ -23,6 +23,8 @@ namespace MileCode {
 
         void ActiveToolDidChange() {
             if(!EditorTools.IsActiveTool(this)) {
+                Debug.Log("Not my lightTool.");
+                this.ResetLight();
                 return;
             }
             //Debug.Log("LightEnv DidChange");
@@ -34,7 +36,7 @@ namespace MileCode {
             Light[] currentLights = Light.GetLights(LightType.Directional, 0);
             if(currentLights.Length >= 1) {
                 this.lights = currentLights;
-                Debug.Log(this.lights.Length);
+                //Debug.Log(this.lights.Length);
                 foreach(Light light in currentLights) {
                     light.enabled = false;
                 }
@@ -55,7 +57,7 @@ namespace MileCode {
             }
             if(lights != null) {
                 if(lights.Length >= 1) {
-                    Debug.Log("CurrentLight" + lights.Length);
+                    //Debug.Log("CurrentLight" + lights.Length);
                     foreach(Light light in this.lights) {
                         light.enabled = true;
                     }
@@ -72,8 +74,8 @@ namespace MileCode {
 
         private void OnDisable() {
             EditorTools.activeToolChanged -= ActiveToolDidChange;
-            Debug.Log("LightEnv Disable");
-            this.ResetLight();
+            //Debug.Log("LightEnv Disable");
+            //this.ResetLight();
         }
 
         
