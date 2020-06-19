@@ -24,7 +24,7 @@ namespace MileCode {
 
         void ActiveToolDidChange() {
             if(!EditorTools.IsActiveTool(this)) {
-                Debug.Log("Not my meshTool.");
+                //Debug.Log("Not my meshTool.");
                 return;
             }
             this.AddMeshInfo();
