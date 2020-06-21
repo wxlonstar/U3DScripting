@@ -21,7 +21,7 @@ namespace MileCode {
 
             }
         }
-
+        
         void ActiveToolDidChange() {
             if(!EditorTools.IsActiveTool(this)) {
                 //Debug.Log("Not my meshTool.");
@@ -30,7 +30,7 @@ namespace MileCode {
             this.AddMeshInfo();
             //Debug.Log("MeshInfo DidChange");
         }
-
+        
         private void AddMeshInfo() {
             MeshRenderer mr = (MeshRenderer)target;
             if(mr.GetComponent<MeshInfo>() == null) {
@@ -40,13 +40,16 @@ namespace MileCode {
 
         private void RemoveMeshInfo() {
             MeshRenderer mr = (MeshRenderer)target;
-            MeshInfo mi = mr.GetComponent<MeshInfo>();
-            if(mi != null) {
-                mi.ResetMesh();
-                DestroyImmediate(mi);
+            if(mr  != null) {
+                MeshInfo mi = mr.GetComponent<MeshInfo>();
+                if(mi != null) {
+                    mi.ResetMesh();
+                    DestroyImmediate(mi);
+                }
             }
+            
         }
-
+        
         private void OnEnable() {
             EditorTools.activeToolChanged += ActiveToolDidChange;
         }
@@ -56,7 +59,7 @@ namespace MileCode {
             //Debug.Log("MeshInfoTool Disable");
             this.RemoveMeshInfo();
         }
-
+        
         public override void OnToolGUI(EditorWindow window) {
             //MeshInfo mi = (MeshInfo)target;
             /*

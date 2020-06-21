@@ -6,6 +6,8 @@ using UnityEditor;
 using UnityEditor.Timeline;
 using UnityEditor.VersionControl;
 using NUnit.Framework.Constraints;
+using UnityEngine.SceneManagement;
+using UnityEditor.SceneManagement;
 
 namespace MileCode {
     [EditorTool("Light Env", typeof(MeshInfo))]
@@ -16,6 +18,12 @@ namespace MileCode {
         List<Light> viewerLights;
         int viewerLightCount = 3;
         float viewrLightAngle = 0;
+        bool bakedGI = false;
+        Material skyMaterial;
+        float SHIntensiy = 1;
+        float defaultIntensity;
+        Color lightColor;
+
         public override GUIContent toolbarIcon {
             get {
                 if(m_ToolbarIcon == null) {
@@ -32,47 +40,83 @@ namespace MileCode {
                 //Debug.Log("Not my lightTool.");
                 this.RemoveLightEnv();
                 this.TurnOnOffSceneLight(true);
+                this.ResetLightingSettings();
                 return;
             }
             //Debug.Log("LightEnv DidChange");
-            this.IntializeSceneLights();
+            this.SaveCurrentSceneLights();
             this.InitializeViewerLight();
+            this.InitializeEnvironmentLight();
             this.BuildLightEnv();
             
         }
 
+        private void ResetLightingSettings() {
+            RenderSettings.ambientIntensity = this.defaultIntensity;
+        }
+
+        private void InitializeEnvironmentLight() {
+            LightmapEditorSettings.lightmapper = LightmapEditorSettings.Lightmapper.ProgressiveGPU;
+            LightmapEditorSettings.bakeResolution = 10;
+            if(!this.bakedGI || RenderSettings.skybox != this.skyMaterial) {
+                this.defaultIntensity = RenderSettings.ambientIntensity;
+                this.bakedGI = Lightmapping.BakeAsync();
+                this.skyMaterial = RenderSettings.skybox;
+            } 
+            
+        }
+
+        private void AdjustSHIntensity(float intensity) {
+            RenderSettings.ambientIntensity = intensity;
+        }
+
         private void RemoveLightEnv() {
-            if(lightEnv != null) {
-                GameObject.DestroyImmediate(lightEnv);
+            if(this.lightEnv != null) {
+                GameObject.DestroyImmediate(this.lightEnv);
             }
             
         }
         private void BuildLightEnv() {
             this.TurnOnOffSceneLight(false);
-            lightEnv = new GameObject("Temp Light");
-            this.addLights(lightEnv, this.viewerLightCount);
+            this.lightEnv = new GameObject("Temp Light");
+            this.addLights(this.lightEnv, 3);
         }
 
-        private float lightIntensity = 1;
+        private float lightIntensity = 1.0f;
         private void addLights(GameObject lightEnv, int num) {
+            Vector3[] lightsAngle = new Vector3[] {
+                new Vector3(40, 140, 0),
+                new Vector3(50, -40, 0),
+                new Vector3(-50, 0, 150)
+            };
             for(int i = 0; i < num; i++) {
                 GameObject lightObj = new GameObject("light_" + i);
                 Light light = lightObj.AddComponent<Light>();
-                light.intensity = this.lightIntensity;
-                light.type = LightType.Directional;
-                light.shadows = LightShadows.Soft;
+                if(i == 0) {
+                    light.intensity = this.lightIntensity;
+                    light.shadows = LightShadows.Soft;
+                } else {
+                    light.intensity = this.lightIntensity * 0.5f;
+                    light.shadows = LightShadows.None;
+                }
+                light.type = LightType.Directional;      
                 light.transform.SetParent(lightEnv.transform);
-                lightObj.transform.localRotation = Quaternion.Euler(new Vector3(50, 60, 0));
-                light.transform.Rotate(new Vector3(i * 120, i * 120, i * 120));
+                lightObj.transform.eulerAngles = lightsAngle[i];
                 this.viewerLights.Add(light);
             }
         }
 
 
         private void AdjustLightIntensity(float lightIntensity) {
-            foreach(Light light in this.viewerLights) {
-                light.intensity = lightIntensity;
-            }
+            if(this.viewerLights != null) {
+                foreach(Light light in this.viewerLights) {
+                    if(light.gameObject.name == "light_0") {
+                        light.intensity = lightIntensity;
+                    } else {
+                        light.intensity = lightIntensity * 0.5f;
+                    }
+                }
+            }      
         }
 
         private void AdjustLightCount(int lightCount) {
@@ -105,7 +149,7 @@ namespace MileCode {
             this.viewerLights = new List<Light>();
         }
 
-        private void IntializeSceneLights() {
+        private void SaveCurrentSceneLights() {
             this.sceneLights = Light.GetLights(LightType.Directional, 0);
             if(this.sceneLights == null) {
                 Debug.Log("sceneLights is not initialized.");
@@ -114,7 +158,7 @@ namespace MileCode {
 
         private void AdjustLightAngle(float lightAngle) {
             if(this.lightEnv != null) {
-                this.lightEnv.transform.localEulerAngles = new Vector3(lightAngle, lightAngle, 0);
+                this.lightEnv.transform.localEulerAngles = new Vector3(0, lightAngle, 0);
             }
         }
 
@@ -163,8 +207,8 @@ namespace MileCode {
                 GUILayout.BeginArea(new Rect(Screen.width - 229, Screen.height - 400, 217, 290), boxStyle);
                 {
                    
-                    GUILayout.Label("Light Condition: ");
                     GUILayout.BeginVertical();
+                    /*
                     if(GUILayout.Button("On / Off")) {
                         if(lightEnv.activeSelf) {
                             lightEnv.SetActive(false);
@@ -172,9 +216,10 @@ namespace MileCode {
                             lightEnv.SetActive(true);
                         }
                     }
-
+                    */
+                    
                     GUILayout.Label("Light Intensity: " + this.lightIntensity);
-                    this.lightIntensity = GUILayout.HorizontalSlider(Mathf.CeilToInt(this.lightIntensity), 0, 10);
+                    this.lightIntensity = GUILayout.HorizontalSlider(this.lightIntensity, 0, 10);
                     this.AdjustLightIntensity(this.lightIntensity);
                     GUILayout.Space(15);
                     GUILayout.Label("Light Number: " + this.viewerLightCount);
@@ -185,6 +230,11 @@ namespace MileCode {
                     this.viewrLightAngle = GUILayout.HorizontalSlider(this.viewrLightAngle, 0, 360);
                     this.AdjustLightAngle(this.viewrLightAngle);
                     GUILayout.Space(15);
+                    if(this.skyMaterial != null) {
+                        GUILayout.Label("SH Source: " + this.skyMaterial.name);
+                        this.SHIntensiy =  GUILayout.HorizontalSlider(this.SHIntensiy, 0, 10);
+                        this.AdjustSHIntensity(this.SHIntensiy);
+                    }
 
                     GUILayout.EndVertical();
                    
