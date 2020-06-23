@@ -61,44 +61,7 @@ namespace MileCode {
         }
         
         public override void OnToolGUI(EditorWindow window) {
-            //MeshInfo mi = (MeshInfo)target;
-            /*
-            Handles.BeginGUI();
-            {
-                GUIStyle boxStyle = new GUIStyle("box");
-                GUILayout.BeginArea(new Rect(10, 10, 300, 400), boxStyle);
-                {
-                    GUILayout.Label("Mesh Information");
-              
 
-                }
-                GUILayout.EndArea();
-            }
-            Handles.EndGUI();
-            */
-            /*
-            EditorGUI.BeginChangeCheck();
-
-            Vector3 position = Tools.handlePosition;
-
-            using(new Handles.DrawingScope(Color.green)) {
-                position = Handles.Slider(position, Vector3.right);
-                //Handles.DrawSolidArc(position + new Vector3(10, 10, 10), Vector3.up, Vector3.down, 90, 10);
-                Handles.Label(position, "make.................");
-            }
-
-            if(EditorGUI.EndChangeCheck()) {
-                Debug.Log("End Check");
-                Vector3 delta = position - Tools.handlePosition;
-
-                Undo.RecordObjects(Selection.transforms, "Move Platform");
-
-                foreach(var transform in Selection.transforms) {
-                    transform.position += delta;
-                }
-                    
-            }
-            */
         }
 
     }

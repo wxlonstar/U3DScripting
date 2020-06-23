@@ -6,6 +6,8 @@ using UnityEditor;
 namespace MileCode {
     [CustomEditor(typeof(MeshInfo))]
     public class MeshInfoEditor : Editor {
+        int rectHeight = 0;
+
         private void OnEnable() {
             //Debug.Log("Checking..");
         }
@@ -17,12 +19,16 @@ namespace MileCode {
             }
         }
 
+        private float GetRectHPosition(float height) {
+            return 240 + 20 * height + 10;
+        }
+
         private void OnSceneGUI() {
             MeshInfo mi = (MeshInfo)target;
             Handles.BeginGUI();
             {
                 GUIStyle boxStyle = new GUIStyle("box");
-                GUILayout.BeginArea(new Rect(10, 10, 300, 400), boxStyle);
+                GUILayout.BeginArea(new Rect(10, Screen.height - 50 - GetRectHPosition(this.rectHeight), 300, GetRectHPosition(this.rectHeight)), boxStyle);      // 20 pixels for a button
                 {
                     GUILayout.Label("Mesh Information");
                     if(mi == null) {
@@ -54,6 +60,7 @@ namespace MileCode {
                         GUILayout.Label("Textures In Use: ");
                         Dictionary<string, string> texturesInfo = mi.GetTexturesNamesInUse();
                         if(texturesInfo.Count >= 1) {
+                            this.rectHeight = texturesInfo.Count;
                             GUILayout.BeginVertical();
                             foreach(string textureVarName in texturesInfo.Keys) {
                                 string textureFileName = texturesInfo[textureVarName];

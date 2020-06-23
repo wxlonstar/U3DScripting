@@ -179,10 +179,13 @@ namespace MileCode {
                     this.meshRenderer.sharedMaterial = this.defaultMaterial;
                 }
             }
-            this.isDefaultMaterialSet = false;
-            this.transform.localPosition = Vector3.zero;
-            this.transform.localRotation = Quaternion.identity;
-            this.transform.localScale = Vector3.one;
+            if(this != null) {
+                this.isDefaultMaterialSet = false;
+                this.transform.localPosition = Vector3.zero;
+                this.transform.localRotation = Quaternion.identity;
+                this.transform.localScale = Vector3.one;
+            }
+            
         }
 
     }
