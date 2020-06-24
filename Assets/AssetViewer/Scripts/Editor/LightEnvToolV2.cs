@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using UnityEditor.EditorTools;
 using UnityEngine.Rendering;
 
 namespace MileCode {
-    [EditorTool("Light EnvV2", typeof(MeshInfo))]
+    [EditorTool("Light EnvV2", typeof(MeshRenderer))]
     public class LightEnvToolV2 : EditorTool {
 
         LightEnv lightEnv;
@@ -47,6 +45,14 @@ namespace MileCode {
             //Debug.Log("Disabled.");
         }
 
+        private float EasyOne(float input) {
+            if(input <= 1.09 && input >= 0.91) {
+                return 1.0f;
+            } else {
+                return input;
+            }
+        }
+
         public override void OnToolGUI(EditorWindow window) {
             Handles.BeginGUI();
             {
@@ -62,7 +68,7 @@ namespace MileCode {
                     GUILayout.EndHorizontal();          //
 
                     GUILayout.Label("Light Intensity: " + this.lightEnv.tempLightIntensity) ;
-                    this.lightEnv.tempLightIntensity = GUILayout.HorizontalSlider(this.lightEnv.tempLightIntensity, 0, 10);
+                    this.lightEnv.tempLightIntensity = GUILayout.HorizontalSlider(this.EasyOne(this.lightEnv.tempLightIntensity), 0, 10);
                     this.lightEnv.SetLightEnvIntensity(this.lightEnv.tempLightIntensity);
                     GUILayout.Space(15);
                     GUILayout.Label("Light Number: " + this.lightEnv.tempLightOnCount);
@@ -84,7 +90,10 @@ namespace MileCode {
                             GUILayout.Label("Ambient Mode: " + RenderSettings.ambientMode.ToString());
                             GUILayout.Label("Skybox Name: " + RenderSettings.skybox.name);
                             GUILayout.Label("Ambient Intensity: " + RenderSettings.ambientIntensity);
-                            RenderSettings.ambientIntensity = GUILayout.HorizontalSlider(RenderSettings.ambientIntensity, 0, 10);
+                            RenderSettings.ambientIntensity = GUILayout.HorizontalSlider(this.EasyOne(RenderSettings.ambientIntensity), 0, 10);
+                            if(RenderSettings.skybox.name != this.lightEnv.bakedSkybox.name) {
+                                this.lightEnv.GetEnvironmentLightingDone();
+                            }
                         }
                         if(RenderSettings.ambientMode == AmbientMode.Flat) {
                             GUILayout.Label("Ambient Mode: " + RenderSettings.ambientMode.ToString());
@@ -108,6 +117,26 @@ namespace MileCode {
                     GUILayout.Label("Reflection Probe: ");
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
+
+                    if(this.lightEnv.environmentLightingDone) {
+                        GUILayout.Label("Reflection Mode: " + RenderSettings.defaultReflectionMode.ToString());
+                        if(RenderSettings.defaultReflectionMode == DefaultReflectionMode.Skybox) {
+                            string skyboxName = null;
+                            if(RenderSettings.skybox != null) {
+                                skyboxName = RenderSettings.skybox.name;
+                            }
+                            GUILayout.Label("Skybox Name: " + skyboxName);
+                        }
+                        if(RenderSettings.defaultReflectionMode == DefaultReflectionMode.Custom) {
+                            string cubemapName = "null";
+                            if(RenderSettings.customReflection != null) {
+                                cubemapName = RenderSettings.customReflection.name;
+                            }
+                            GUILayout.Label("Cubemap Name: " + cubemapName);
+                        }
+                        GUILayout.Label("Reflection Intensity: " + RenderSettings.reflectionIntensity);
+                        RenderSettings.reflectionIntensity = GUILayout.HorizontalSlider(RenderSettings.reflectionIntensity, 0, 1);
+                    }
 
                     GUILayout.EndVertical();
                 }

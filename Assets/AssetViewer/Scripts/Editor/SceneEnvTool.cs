@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.EditorTools;
 
 namespace MileCode {
-    [EditorTool("Scene Env", typeof(MeshInfo))]
+    [EditorTool("Scene Env", typeof(MeshRenderer))]
     public class SceneEnvTool : EditorTool {
         List<SceneEnv> loadedSceneEnvs;
 

@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEditor.EditorTools;
 
 namespace MileCode {
-    [EditorTool("Mesh Info", typeof(MeshRenderer))]
+    //[EditorTool("Mesh Info", typeof(MeshRenderer))]
     public class MeshInfoTool : EditorTool {
         GUIContent m_ToolbarIcon;
         public override GUIContent toolbarIcon {

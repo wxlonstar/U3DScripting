@@ -12,6 +12,8 @@ public class LightEnv : ScriptableObject {
     GameObject tempLight;
     public float tempLightAngle = 0;
     public bool environmentLightingDone = false;
+    public Material bakedSkybox;
+    private Cubemap[] reflectionProbes;
 
     public void GetEnvironmentLightingDone() {
         LightmapEditorSettings.lightmapper = LightmapEditorSettings.Lightmapper.ProgressiveGPU;
@@ -27,7 +29,9 @@ public class LightEnv : ScriptableObject {
     private void TurnOffAutoGenerate() {
         JustWaitAndRun(1.0f);
         this.environmentLightingDone = true;
+        this.bakedSkybox = RenderSettings.skybox;
         Lightmapping.giWorkflowMode = Lightmapping.GIWorkflowMode.OnDemand;
+        Lightmapping.bakeCompleted -= this.TurnOffAutoGenerate;
     }
 
     public void SetLightEnvAngle(float lightAngle) {
