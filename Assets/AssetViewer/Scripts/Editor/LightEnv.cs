@@ -1,14 +1,41 @@
-﻿using ICSharpCode.NRefactory.Ast;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 public class LightEnv : ScriptableObject {
+
     public float tempLightIntensity = 1f;
     public int tempLightOnCount = 3;
     GameObject tempLight;
+    public float tempLightAngle = 0;
+    public bool environmentLightingDone = false;
+
+    public void GetEnvironmentLightingDone() {
+        LightmapEditorSettings.lightmapper = LightmapEditorSettings.Lightmapper.ProgressiveGPU;
+        LightmapEditorSettings.bakeResolution = 10;
+        Lightmapping.giWorkflowMode = Lightmapping.GIWorkflowMode.Iterative;
+        Lightmapping.bakeCompleted += this.TurnOffAutoGenerate;
+    }
+
+    IEnumerator JustWaitAndRun(float seconds) {
+        yield return new EditorWaitForSeconds(seconds);
+    }
+
+    private void TurnOffAutoGenerate() {
+        JustWaitAndRun(1.0f);
+        this.environmentLightingDone = true;
+        Lightmapping.giWorkflowMode = Lightmapping.GIWorkflowMode.OnDemand;
+    }
+
+    public void SetLightEnvAngle(float lightAngle) {
+        if(this.tempLight != null) {
+            this.tempLight.transform.localEulerAngles = new Vector3(0, lightAngle, 0);
+        }
+    }
+
     public void SetLightEnvIntensity(float intensity) {
         if(this.tempLight != null) {
             Light[] lights  = this.tempLight.GetComponentsInChildren<Light>();

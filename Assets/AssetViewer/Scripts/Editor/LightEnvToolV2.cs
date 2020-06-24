@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.EditorTools;
+using UnityEngine.Rendering;
 
 namespace MileCode {
     [EditorTool("Light EnvV2", typeof(MeshInfo))]
@@ -56,7 +57,7 @@ namespace MileCode {
 
                     GUILayout.BeginHorizontal();        //
                     GUILayout.FlexibleSpace();
-                    GUILayout.Label("Light Condition:");        // this is firstline
+                    GUILayout.Label("------------ Light Env ------------");        // this is firstline
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();          //
 
@@ -67,6 +68,47 @@ namespace MileCode {
                     GUILayout.Label("Light Number: " + this.lightEnv.tempLightOnCount);
                     this.lightEnv.tempLightOnCount = (int)GUILayout.HorizontalSlider(this.lightEnv.tempLightOnCount, 1, 3);
                     this.lightEnv.SetLightEnvOnNumber(this.lightEnv.tempLightOnCount - 1);
+                    GUILayout.Space(15);
+                    GUILayout.Label("Light Angle: " + this.lightEnv.tempLightAngle);
+                    this.lightEnv.tempLightAngle = GUILayout.HorizontalSlider(this.lightEnv.tempLightAngle, 0, 360);
+                    this.lightEnv.SetLightEnvAngle(this.lightEnv.tempLightAngle);
+                    GUILayout.Space(15);
+                    GUILayout.BeginHorizontal();
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Label("Spherical Harmonics");
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+
+                    if(this.lightEnv.environmentLightingDone) {
+                        if(RenderSettings.ambientMode == AmbientMode.Skybox) {
+                            GUILayout.Label("Ambient Mode: " + RenderSettings.ambientMode.ToString());
+                            GUILayout.Label("Skybox Name: " + RenderSettings.skybox.name);
+                            GUILayout.Label("Ambient Intensity: " + RenderSettings.ambientIntensity);
+                            RenderSettings.ambientIntensity = GUILayout.HorizontalSlider(RenderSettings.ambientIntensity, 0, 10);
+                        }
+                        if(RenderSettings.ambientMode == AmbientMode.Flat) {
+                            GUILayout.Label("Ambient Mode: " + RenderSettings.ambientMode.ToString());
+                            EditorGUILayout.ColorField("Baked Color: ", RenderSettings.ambientLight);
+                        }
+                        if(RenderSettings.ambientMode == AmbientMode.Trilight) {
+                            GUILayout.Label("Ambient Mode: " + RenderSettings.ambientMode.ToString());
+                            EditorGUILayout.ColorField("Sky Color: ", RenderSettings.ambientSkyColor);
+                            EditorGUILayout.ColorField("Equator Color: ", RenderSettings.ambientEquatorColor);
+                            EditorGUILayout.ColorField("Ground Color: ", RenderSettings.ambientGroundColor);
+                        }
+                    } else {
+                        if(GUILayout.Button("Bake SH")) {
+                            this.lightEnv.GetEnvironmentLightingDone();
+                        }
+                    }
+
+                    GUILayout.Space(15);
+                    GUILayout.BeginHorizontal();
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Label("Reflection Probe: ");
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+
                     GUILayout.EndVertical();
                 }
                 GUILayout.EndArea();

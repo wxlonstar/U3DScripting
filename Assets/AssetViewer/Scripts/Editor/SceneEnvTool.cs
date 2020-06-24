@@ -49,7 +49,7 @@ namespace MileCode {
                 GUIStyle boxStyle = new GUIStyle("box");
                 GUILayout.BeginArea(new Rect(Screen.width - 229, Screen.height - 450, 217, 340), boxStyle);
                 {
-                    GUILayout.Label("-----------------------------------");
+                    GUILayout.Label("------------ SceneEnv -------------");
                     if(this.loadedSceneEnvs == null || this.loadedSceneEnvs.Count <= 0) {
                         GUILayout.Label("SceneEnv not found");
                     } else {

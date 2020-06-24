@@ -72,8 +72,8 @@ namespace MileCode {
         }
 
         private void SetBakedGI() {
-            this.bakedGI = true;
             JustWaitAndRun();
+            this.bakedGI = true;
             Lightmapping.giWorkflowMode = Lightmapping.GIWorkflowMode.OnDemand;
         }
 
