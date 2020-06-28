@@ -17,13 +17,14 @@ namespace MileCode {
                             "Light EnvV2"
                             );
                 }
+                m_ToolbarIcon.text = "LightEnv";
                 return m_ToolbarIcon;
             }
         }
 
         void ActiveToolDidChange() {
             if(!EditorTools.IsActiveTool(this)) {
-                LightEnv.RestoreSavedLightEnv();
+                LightEnv.RestoreSavedLightEnv(this);
                 if(this.lightEnv != null) {
                     this.lightEnv.RemoveEnvironment();
                 }
@@ -92,12 +93,18 @@ namespace MileCode {
                     if(this.lightEnv.environmentLightingDone) {
                         if(RenderSettings.ambientMode == AmbientMode.Skybox) {
                             GUILayout.Label("Ambient Mode: " + RenderSettings.ambientMode.ToString());
-                            GUILayout.Label("Skybox Name: " + RenderSettings.skybox.name);
+                            if(RenderSettings.skybox != null) {
+                                GUILayout.Label("Skybox Name: " + RenderSettings.skybox.name);
+                            } else {
+                                GUILayout.Label("Skybox Name: " + "null");
+                            }
+                            if(RenderSettings.skybox != this.lightEnv.bakedSkybox) {
+                                this.lightEnv.GetEnvironmentLightingDone();
+                                //LightEnvManager.GetEnvironmentLightingDone(this.lightEnv);
+                            }
                             GUILayout.Label("Ambient Intensity: " + RenderSettings.ambientIntensity);
                             RenderSettings.ambientIntensity = GUILayout.HorizontalSlider(this.EasyOne(RenderSettings.ambientIntensity), 0, 10);
-                            if(RenderSettings.skybox.name != this.lightEnv.bakedSkybox.name) {
-                                this.lightEnv.GetEnvironmentLightingDone();
-                            }
+                            
                         }
                         if(RenderSettings.ambientMode == AmbientMode.Flat) {
                             GUILayout.Label("Ambient Mode: " + RenderSettings.ambientMode.ToString());
@@ -112,6 +119,7 @@ namespace MileCode {
                     } else {
                         if(GUILayout.Button("Bake SH")) {
                             this.lightEnv.GetEnvironmentLightingDone();
+                            //LightEnvManager.GetEnvironmentLightingDone(this.lightEnv);
                         }
                     }
 

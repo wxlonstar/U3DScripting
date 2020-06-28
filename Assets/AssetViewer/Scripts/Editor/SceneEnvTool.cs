@@ -16,13 +16,14 @@ namespace MileCode {
                             "Scene Env"
                             );
                 }
+                m_ToolbarIcon.text = "SceneEnv";
                 return m_ToolbarIcon;
             }
         }
 
         void ActiveToolDidChange() {
             if(!EditorTools.IsActiveTool(this)) {
-                LightEnv.RestoreSavedLightEnv();
+                LightEnv.RestoreSavedLightEnv(this);
                 LightEnvManager.TurnOffAllTempLights();
                 return;
             }
@@ -52,10 +53,19 @@ namespace MileCode {
                         using(var scrollView = new GUILayout.ScrollViewScope(this.pos)) {
                             this.pos = scrollView.scrollPosition;
                             foreach(LightEnv lightEnv in LightEnvManager.lightEnvsFound) {
+                                GUILayout.BeginHorizontal();
                                 if(GUILayout.Button(lightEnv.GetName())) {
                                     LightEnvManager.Apply(lightEnv);
+                                    
+                                }
+                                if(lightEnv.HasAdditionalProbes()) {
+                                    if(GUILayout.Button("Ref", GUILayout.Width(40))) {
+                                        lightEnv.UseAdditionalReflectionProbe();
+                                    }
                                 }
                                 
+                                GUILayout.EndHorizontal();
+
                             }
                         }
                     }

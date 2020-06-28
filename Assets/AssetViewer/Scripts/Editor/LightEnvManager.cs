@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 using System.IO;
-using UnityEditor.Experimental.TerrainAPI;
 
 namespace MileCode {
     public class LightEnvManager : Editor {
@@ -28,6 +27,7 @@ namespace MileCode {
             lightEnv.SaveLightParams();
             lightEnv.SaveEnvironmentLighting();
             lightEnv.SaveReflectionProbe();
+            lightEnv.SaveAdditionalProbes();
             return lightEnv;
         }
 
@@ -39,6 +39,26 @@ namespace MileCode {
             lightEnv.UseReflectionProbeFromScriptObject();
             lightEnv.GetEnvironmentLightingDone();
         }
+        /*
+        public static bool GetEnvironmentLightingDone(LightEnv lightEnv) {
+            LightmapEditorSettings.lightmapper = LightmapEditorSettings.Lightmapper.ProgressiveGPU;
+            LightmapEditorSettings.bakeResolution = 10;
+            Lightmapping.giWorkflowMode = Lightmapping.GIWorkflowMode.Iterative;
+            Lightmapping.bakeCompleted += TurnOffAutoGenerate;
+            lightEnv.AfterLightingDone();
+            return true;
+        }
+
+        public static IEnumerator JustWaitAndRun(float seconds) {
+            yield return new EditorWaitForSeconds(seconds);
+        }
+
+        private static void TurnOffAutoGenerate() {
+            JustWaitAndRun(1.0f);
+            Lightmapping.giWorkflowMode = Lightmapping.GIWorkflowMode.OnDemand;
+            Lightmapping.bakeCompleted -= TurnOffAutoGenerate;
+        }
+        */
 
         public static void TurnOffAllTempLightsExcept(LightEnv lightEnvInUse) {
             foreach(LightEnv lightEnv in lightEnvsFound) {

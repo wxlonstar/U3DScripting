@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cb89f960bedeca48801d180b74a2567, type: 3}
+  m_Name: saveProbes_0628115737_lightEnv
+  m_EditorClassIdentifier: 
+  sceneName: saveProbes
+  tempLightIntensity: 1
+  tempLightOnCount: 3
+  tempLightAngle: 0
+  environmentLightingDone: 0
+  bakedSkybox: {fileID: 0}
+  lightNames:
+  - Directional Light
+  lightsTransform_rotation:
+  - {x: 50, y: 330, z: 0}
+  lightColors:
+  - {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  lightBakeType: 04000000
+  lightIntensity:
+  - 1
+  lightIndirectIntensity:
+  - 1
+  lightShadowType: 02000000
+  ambientMode: 0
+  ambientIntensity: 1
+  ambientSkybox: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  ambientSkyboxColor: {r: 0, g: 0, b: 0, a: 0}
+  ambientColors: []
+  ambientFlatColor: {r: 0, g: 0, b: 0, a: 0}
+  defaultReflectionMode: 0
+  customReflectionProbe: {fileID: 0}
+  reflectionIntensity: 1
+  additionalReflectionCubeMaps:
+  - {fileID: 8900000, guid: f1212d3cafc58d249b319a2fc212b5c8, type: 3}
+  - {fileID: 8900000, guid: c019bf8254c184d47987962f18094247, type: 3}
