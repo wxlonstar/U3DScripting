@@ -24,11 +24,15 @@ namespace MileCode {
         void ActiveToolDidChange() {
             if(!EditorTools.IsActiveTool(this)) {
                 LightEnv.RestoreSavedLightEnv();
-                this.lightEnv.RemoveEnvironment();
+                if(this.lightEnv != null) {
+                    this.lightEnv.RemoveEnvironment();
+                }
                 return;
             }
             LightEnv.TurnOffSavedLightEnv();
-            this.lightEnv.CreateEnvironment();
+            if(this.lightEnv != null) {
+                this.lightEnv.CreateEnvironment();
+            }   
         }
 
         private void OnEnable() {

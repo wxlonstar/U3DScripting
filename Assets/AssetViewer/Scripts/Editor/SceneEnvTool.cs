@@ -7,7 +7,6 @@ using UnityEditor.EditorTools;
 namespace MileCode {
     [EditorTool("Scene Env", typeof(MeshRenderer))]
     public class SceneEnvTool : EditorTool {
-        List<SceneEnv> loadedSceneEnvs;
 
         GUIContent m_ToolbarIcon;
         public override GUIContent toolbarIcon {
@@ -23,25 +22,21 @@ namespace MileCode {
 
         void ActiveToolDidChange() {
             if(!EditorTools.IsActiveTool(this)) {
+                LightEnv.RestoreSavedLightEnv();
+                LightEnvManager.TurnOffAllTempLights();
                 return;
             }
-            
         }
 
         private void OnEnable() {
             EditorTools.activeToolChanged += this.ActiveToolDidChange;
-            //Debug.Log("Load SceneEnv");
-            this.LoadSceneEnvs();
-        }
-
-        private void LoadSceneEnvs() {
-            this.loadedSceneEnvs = new List<SceneEnv>();
-            this.loadedSceneEnvs.Add(ScriptableObject.CreateInstance<SceneEnv>());
+            LightEnvManager.LoadLightEnv();
         }
 
         private void OnDisable() {
             EditorTools.activeToolChanged -= this.ActiveToolDidChange;
         }
+
         Vector2 pos = new Vector2(10, 10);
         public override void OnToolGUI(EditorWindow window) {
             Handles.BeginGUI();
@@ -49,16 +44,16 @@ namespace MileCode {
                 GUIStyle boxStyle = new GUIStyle("box");
                 GUILayout.BeginArea(new Rect(Screen.width - 229, Screen.height - 450, 217, 340), boxStyle);
                 {
-                    GUILayout.Label("------------ SceneEnv -------------");
-                    if(this.loadedSceneEnvs == null || this.loadedSceneEnvs.Count <= 0) {
-                        GUILayout.Label("SceneEnv not found");
+                    GUILayout.Label("------------ LightEnv -------------");
+                    if(LightEnvManager.lightEnvsFound == null || LightEnvManager.lightEnvsFound.Count <= 0) {
+                        GUILayout.Label("LightEnv not found");
                     } else {
-                        GUILayout.Label("SceneEnv found: " + this.loadedSceneEnvs.Count);
+                        GUILayout.Label("LightEnv found: " + LightEnvManager.lightEnvsFound.Count);
                         using(var scrollView = new GUILayout.ScrollViewScope(this.pos)) {
                             this.pos = scrollView.scrollPosition;
-                            foreach(SceneEnv sceneEnv in this.loadedSceneEnvs) {
-                                if(GUILayout.Button(sceneEnv.GetName())) {
-                                    sceneEnv.ApplySceneEnv();
+                            foreach(LightEnv lightEnv in LightEnvManager.lightEnvsFound) {
+                                if(GUILayout.Button(lightEnv.GetName())) {
+                                    LightEnvManager.Apply(lightEnv);
                                 }
                                 
                             }

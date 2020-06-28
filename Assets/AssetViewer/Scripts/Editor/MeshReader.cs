@@ -12,8 +12,11 @@ namespace MileCode {
         Vector3 originalPosition = Vector3.zero;
         Vector3 originalEulerAngles = Vector3.zero;
         Vector3 originalScale = Vector3.one;
-
-
+        Material defaultMaterial;
+        Material UVMaterial;
+        Material mapCheckerMaterial;
+        public float uvTilling = 1;
+        public Dictionary<string, string> texturesInUse;
 
         public MeshReader(MeshRenderer meshRenderer) {
             if(meshRenderer != null) {
@@ -25,6 +28,10 @@ namespace MileCode {
                 this.originalEulerAngles = meshRenderer.transform.localEulerAngles;
                 this.originalPosition = meshRenderer.transform.localPosition;
                 this.originalScale = meshRenderer.transform.localScale;
+                this.defaultMaterial = meshRenderer.sharedMaterial;
+                this.UVMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/AssetViewer/Materials/UVChecker.mat");
+                this.mapCheckerMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                this.SetTexturesInUse();
             }
         }
 
@@ -82,6 +89,53 @@ namespace MileCode {
             this.meshRenderer.transform.localPosition = this.originalPosition;
             this.meshRenderer.transform.localEulerAngles = this.originalEulerAngles;
             this.meshRenderer.transform.localScale = this.originalScale;
+            // by the way, set default material
+            this.SetDefaultMaterial();
         }
+
+        public void SetDefaultMaterial() {
+            this.meshRenderer.sharedMaterial = this.defaultMaterial;
+        }
+
+        public void CheckUV() {
+            this.meshRenderer.sharedMaterial = this.UVMaterial;
+        }
+
+        public void TileUV(float scale) {
+            if(this.meshRenderer.sharedMaterial.name == "UVChecker") {
+                this.meshRenderer.sharedMaterial.SetTextureScale("_BaseMap", new Vector2(scale, scale));
+            }
+        }
+
+        public string GetDefaultMaterialName() {
+            return this.defaultMaterial.name;
+        }
+
+        public string GetDefaultShaderName() {
+            return this.defaultMaterial.shader.name;
+        }
+
+
+        private void SetTexturesInUse() {
+            ///List<Texture> texturesInUse = new List<Texture>();
+            Dictionary<string, string> texturesInUse = new Dictionary<string, string>();
+            string[] textureVariables = this.defaultMaterial.GetTexturePropertyNames();
+            if(textureVariables.Length >= 1) {
+                foreach(string textureVariable in textureVariables) {
+                    Texture textureFileName = this.defaultMaterial.GetTexture(textureVariable);
+                    if(textureFileName != null) {
+                        texturesInUse.Add(textureVariable, textureFileName.name);
+                    }
+                }
+            }
+            this.texturesInUse = texturesInUse;
+        }
+
+        public void CheckMap(string mapName) {
+            Texture targetTexture = this.defaultMaterial.GetTexture(mapName);
+            mapCheckerMaterial.SetTexture("_BaseMap", targetTexture);
+            this.meshRenderer.sharedMaterial = mapCheckerMaterial;
+        }
+
     }
 }

@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEditor.EditorTools;
 using UnityEngine.Rendering;
+using System.Collections.Generic;
 
 namespace MileCode {
     [EditorTool("Mesh InfoV2", typeof(MeshRenderer))]
@@ -25,11 +26,13 @@ namespace MileCode {
 
         void ActiveToolDidChange() {
             if(!EditorTools.IsActiveTool(this)) {
-                Debug.Log("Not Using MeshToolV2");
-                this.meshReader.ResetMeshTransform();
+                //Debug.Log("Not Using MeshToolV2");
+                if(this.meshReader != null) {
+                    this.meshReader.ResetMeshTransform();
+                }
                 return;
             }
-            Debug.Log("Using MeshToolV2");
+            //Debug.Log("Using MeshToolV2");
             this.meshReader = new MeshReader((MeshRenderer)target);
         }
 
@@ -47,13 +50,11 @@ namespace MileCode {
             //Debug.Log("MeshToolV2 disabled");
         }
         // temp
-        int texturesCount = 3;
         public override void OnToolGUI(EditorWindow window) {
-
             Handles.BeginGUI();
             {
                 GUIStyle boxStyle = new GUIStyle("box");
-                GUILayout.BeginArea(new Rect(10, Screen.height - 50 - GetRectHPosition(this.texturesCount), 300, GetRectHPosition(this.texturesCount)), boxStyle);
+                GUILayout.BeginArea(new Rect(10, Screen.height - 50 - GetRectHPosition(this.meshReader.texturesInUse.Count), 300, GetRectHPosition(this.meshReader.texturesInUse.Count)), boxStyle);
                 {
                     GUILayout.Label("--------------- Mesh Information ----------------");
                     GUILayout.Label("Mesh Name: " + this.meshReader.GetMeshName());
@@ -62,6 +63,31 @@ namespace MileCode {
                     GUILayout.Label("Turntable Speed: " + this.meshReader.turnTableSpeed);
                     this.meshReader.turnTableSpeed = GUILayout.HorizontalSlider(this.meshReader.turnTableSpeed, 0, 10);
                     this.meshReader.RotateMesh(this.meshReader.turnTableSpeed);
+                    GUILayout.Space(18);
+                    GUILayout.BeginHorizontal();
+                    if(GUILayout.Button("Material", GUILayout.Width(144))) {
+                        this.meshReader.SetDefaultMaterial();
+                    }
+                    if(GUILayout.Button("UV", GUILayout.Width(144))) {
+                        this.meshReader.CheckUV();
+                    }
+                    GUILayout.EndHorizontal();
+                    GUILayout.Space(2);
+                    GUILayout.Label("UV Tilling: (works only for UV mode)");
+                    this.meshReader.uvTilling = GUILayout.HorizontalSlider(this.meshReader.uvTilling, 1, 20);
+                    this.meshReader.TileUV(this.meshReader.uvTilling);
+                    GUILayout.Space(15);
+                    GUILayout.Label("Material Name: " + this.meshReader.GetDefaultMaterialName());
+                    GUILayout.Label("Shader Name: " + this.meshReader.GetDefaultShaderName());
+                    GUILayout.Label("Textures In Use: ");
+                    if(this.meshReader.texturesInUse.Count >= 1) {
+                        foreach(string textureVariable in this.meshReader.texturesInUse.Keys) {
+                            if(GUILayout.Button(this.meshReader.texturesInUse[textureVariable])) {
+                                this.meshReader.CheckMap(textureVariable);
+                            }
+                        }
+                    }
+      
                 }
                 GUILayout.EndArea();
             }
