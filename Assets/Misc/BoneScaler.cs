@@ -17,7 +17,7 @@ public class BoneScaler {
     }
 
     public static void DeformToFat() {
-        if(isIntialized) {
+        if(!isIntialized) {
             return;
         }
         Debug.Log("BoneSizeData: " + boneSizeData.HeadSize.ToString());

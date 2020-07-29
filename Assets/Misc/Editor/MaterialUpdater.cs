@@ -10,29 +10,40 @@ namespace MileCode {
         private static void UpdateSelection() {
             MaterialUpdater updaterWindow = EditorWindow.GetWindow(typeof(MaterialUpdater)) as MaterialUpdater;
             GUIContent gUIContent = new GUIContent();
-            gUIContent.text = "Material Upater";
+            gUIContent.text = "Material Updater";
             gUIContent.tooltip = "This tool is used to update project materials";
             updaterWindow.titleContent = gUIContent;
-            Vector2 windowSize = new Vector2(500, 500);
+            Vector2 windowSize = new Vector2(600, 500);
             updaterWindow.maxSize = windowSize;
             updaterWindow.minSize = windowSize;
             updaterWindow.Show();
         }
 
 
-
+        Rect rect_ImportMaterial = new Rect(new Vector2(0, 0), new Vector2(300, 500));
+        Rect rect_MaterialBox = new Rect(new Vector2(3, 0), new Vector2(287, 18));
+        Vector2 pos = new Vector2(10, 10);
         private void OnGUI() {
-            GUILayout.Label("----------------------------------------------------------------------------------", EditorStyles.boldLabel);
-            if(GUILayout.Button("Import Materials")) {
-                var selection = Selection.objects;
-                if(selection == null || selection.Length == 0) {
-                    EditorUtility.DisplayDialog("Error", "You the man", "Yeah");
-                    return;
-                } else {
-                    
+            Handles.BeginGUI();
+            {
+                GUIStyle boxStyle = new GUIStyle("box");
+
+                GUILayout.BeginArea(rect_ImportMaterial, boxStyle);
+                {
+                    GUILayout.BeginVertical();
+                    GUILayout.Label("---------------------------------------------------------------------------------------------------");
+                    if(GUILayout.Button("Import Materials")) {
+                        
+                    }
+                    using(var scrollView = new GUILayout.ScrollViewScope(this.pos)) {
+                        this.pos = scrollView.scrollPosition;
+                        EditorGUI.ObjectField(rect_MaterialBox, null, typeof(Material), false);
+                    }
+                    GUILayout.EndVertical();
                 }
+                GUILayout.EndArea();
             }
-            EditorGUI.ObjectField(new Rect(new Vector2(5, 15), new Vector2(150, 20)), null, typeof(Material), true);
+            Handles.EndGUI();
         }
     }
 }

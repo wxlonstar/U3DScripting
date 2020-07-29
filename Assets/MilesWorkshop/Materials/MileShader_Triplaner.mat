@@ -7,8 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Custom_Glass
-  m_Shader: {fileID: 4800000, guid: 7cec38e6f2ba99043b141b7828281e7e, type: 3}
+  m_Name: MileShader_Triplaner
+  m_Shader: {fileID: -6465566751694194690, guid: a0ecf4aff5f56a140b08e33d9575ca61,
+    type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -20,11 +21,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 84508b93f15f2b64386ec07486afc7a3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _EdgeThickness: 1.7
+    - _Blend: 10
+    - _Tile: 1
     m_Colors:
-    - _Color: {r: 1, g: 0, b: 0, a: 0.043137256}
-    - _EdgeColor: {r: 0.8207547, g: 0.13550194, b: 0.13550194, a: 0.5254902}
+    - _Color: {r: 1, g: 0.1462264, b: 0.1462264, a: 0}
