@@ -37,7 +37,10 @@ namespace MileCode {
                     }
                     using(var scrollView = new GUILayout.ScrollViewScope(this.pos)) {
                         this.pos = scrollView.scrollPosition;
+                        //EditorGUI.ObjectField(rect_MaterialBox, null, typeof(Material), false);
                         EditorGUI.ObjectField(rect_MaterialBox, null, typeof(Material), false);
+                        EditorGUI.ObjectField(rect_MaterialBox, null, typeof(Material), false);
+                        
                     }
                     GUILayout.EndVertical();
                 }
