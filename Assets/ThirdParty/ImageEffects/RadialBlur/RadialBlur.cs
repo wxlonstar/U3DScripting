@@ -1,10 +1,9 @@
 using UnityEngine;
-using SLua;
 
-[CustomLuaClassAttribute]
+
+
 [ExecuteInEditMode]
-public class RadialBlur : ImageEffectBase
-{
+public class RadialBlur : ImageEffectBase {
     //[HideInInspector]
     public int iteration = 1;
     //[HideInInspector]
@@ -14,16 +13,13 @@ public class RadialBlur : ImageEffectBase
     //[HideInInspector]
     public Vector2 center = new Vector2(0.5f, 0.5f);
 
-    void Start()
-    {
-        if (shader == null)
-        {
+    void Start() {
+        if(shader == null) {
             Debug.LogError("shader missing!", this);
         }
     }
 
-    void OnRenderImage(RenderTexture source, RenderTexture dest)
-    {       
+    void OnRenderImage(RenderTexture source, RenderTexture dest) {
         material.SetFloat("_BlurStrength", blurStrength);
         material.SetFloat("_BlurWidth", blurWidth);
         material.SetVector("_Center", center);

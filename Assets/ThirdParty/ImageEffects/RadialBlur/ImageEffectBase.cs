@@ -1,7 +1,7 @@
 using UnityEngine;
-using SLua;
 
-[CustomLuaClassAttribute]
+
+
 [RequireComponent (typeof(Camera))]
 [AddComponentMenu("")]
 public class ImageEffectBase : MonoBehaviour {
