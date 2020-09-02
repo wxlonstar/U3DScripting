@@ -8,7 +8,7 @@ namespace MileCode {
         public int lightmapIndex;
         public Vector4 lightmapScaleAndOffset = new Vector4(1, 1, 0, 0);
         public Texture2D lightmap;
-        private Renderer renderer;
+        private new Renderer renderer;
         private MaterialPropertyBlock propBlock;
 
         void SetLightmapValues(int index, Vector4 scaleAndOffset) {
