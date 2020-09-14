@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MileShader_Emissive
+  m_Shader: {fileID: -6465566751694194690, guid: 8daa0da55a6f8564aa4bad276940b841,
+    type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_5636FEB1:
+        m_Texture: {fileID: 2800000, guid: 38b20160abde20a4582db2af15af7089, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_7805E8FF:
+        m_Texture: {fileID: 2800000, guid: ad7aaf4c5e214874da29dd01163beaf4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_8709B41D:
+        m_Texture: {fileID: 2800000, guid: 8f3ca1198c8c6ea40b68d330a25fe87b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Albedo:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask:
+        m_Texture: {fileID: 2800000, guid: 327970b11d8023949b942c826197aa2e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetalWithSmooth:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Vector1_302C3E63: 1
+    - _EmissiveIntensity: 3
+    - _Smoothness: 0.5
+    m_Colors:
+    - Color_A3CF7F08: {r: 0.8396226, g: 0.8396226, b: 0.8396226, a: 0}
+    - Color_B0A09A63: {r: 0.31132078, g: 0.2392177, b: 0.06314526, a: 0}
+    - Color_BB7BDA7D: {r: 1, g: 0.9249583, b: 0.60784316, a: 0}
+    - _PickColor: {r: 1, g: 1, b: 0, a: 0}
