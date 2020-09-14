@@ -5,102 +5,39 @@
         _Color3("Color3", Color) = (1, 1, 1, 1)
         [Toggle]_ANOTHER("Another Prop", Float) = 0
     }
-    SubShader {
-        Tags {"RenderType" = "Opaque" "Queue" = "Transparent" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True"}
+        SubShader {
+        Tags { "RenderType" = "Transparent" "Queue" = "Transparent"}
+        
         Pass {
-            Name "SimpleLit"
-            Tags {"LightMode" = "UniversalForward"}
-            Blend SrcAlpha OneMinusSrcAlpha
-            ZWrite On
-            ZTest Always
+            
             Stencil {
-                Ref 0
-                
+                Ref 2
+                Comp Always
+                Pass Replace
+                //ZFail DecrWrap
             }
-            
-            HLSLPROGRAM
-            #pragma prefer_hlslcc gles
-            #pragma exclude_renderers d3d11_9x
-            #pragma target 2.0
 
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            Blend SrcAlpha OneMinusSrcAlpha
 
+            CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-
-            CBUFFER_START(UnityPerMaterial)
-            half4 _Color1;
-            CBUFFER_END
-
-            struct a2v {
-                float4 positionOS : POSITION;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
+            struct appdata {
+                float4 vertex : POSITION;
             };
-
             struct v2f {
-                float4 positionCS : SV_POSITION;
+                float4 pos : SV_POSITION;
             };
-
-
-            v2f vert(a2v v) {
-                v2f o = (v2f)0;
-                UNITY_SETUP_INSTANCE_ID(v);
-                VertexPositionInputs vpi = GetVertexPositionInputs(v.positionOS.xyz);
-                o.positionCS = vpi.positionCS;
+            v2f vert(appdata v) {
+                v2f o;
+                o.pos = UnityObjectToClipPos(v.vertex);
                 return o;
             }
-            
-            half4 frag(v2f i) : SV_TARGET {
-                return _Color1;
+            half4 frag(v2f i) : SV_Target {
+                return half4(1,0,0,0.1);
             }
-            
-            ENDHLSL
-            
+            ENDCG
         }
-        /*
-        Pass {
-            Name "SecondPass"
-            //Blend SrcAlpha OneMinusSrcAlpha
-            //ZWrite Off
-            
-            HLSLPROGRAM
-            #pragma prefer_hlslcc gles
-            #pragma exclude_renderers d3d11_9x
-            #pragma target 2.0
-
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-
-            #pragma vertex vert
-            #pragma fragment frag
-
-            CBUFFER_START(UnityPerMaterial)
-            half4 _Color2;
-            CBUFFER_END
-
-            struct a2v {
-                float4 positionOS : POSITION;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
-            };
-
-            struct v2f {
-                float4 positionCS : SV_POSITION;
-            };
-
-            v2f vert(a2v v) {
-                v2f o = (v2f)0;
-                UNITY_SETUP_INSTANCE_ID(v);
-                VertexPositionInputs vpi = GetVertexPositionInputs(v.positionOS.xyz);
-                o.positionCS = vpi.positionCS;
-                return o;
-            }
-
-            half4 frag(v2f i) : SV_TARGET {
-                return _Color2;
-                //return half4(0, 1, 0, 1);
-            }
-            
-            ENDHLSL
-        }
-        */
     }
+
 }
