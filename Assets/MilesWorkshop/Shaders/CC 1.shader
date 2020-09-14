@@ -1,4 +1,4 @@
-﻿Shader "MileShader/CC" {
+﻿Shader "MileShader/CCV2" {
     Properties {
         _Color1("Color1", Color) = (1, 1, 1, 1)
         _Color2("Color2", Color) = (1, 1, 1, 1)
@@ -6,15 +6,15 @@
         [Toggle]_ANOTHER("Another Prop", Float) = 0
     }
         SubShader {
-        Tags { "RenderType" = "Opaque" "Queue" = "Geometry+2"}
+        Tags { "RenderType" = "Opaque" "Queue" = "Geometry"}
         Pass {
-                
+                /*
             Stencil {
                 Ref 2
                 Comp Always
-                Pass Replace
+                Pass replace
             }
-            
+        */
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -30,7 +30,7 @@
                 return o;
             }
             half4 frag(v2f i) : SV_Target {
-                return half4(0,0.3,0,1);
+                return half4(0,0,0,1);
             }
             ENDCG
         }
