@@ -103,6 +103,8 @@
 			struct a2v {
 				float4 posOS : POSITION;
 				float4 texcoord : TEXCOORD0;
+				float3 normalOS : NORMAL;
+				float4 tangentOS : TANGENT;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -111,18 +113,26 @@
 				float2 uvForControlMap : TEXCOORD0;
 				float4 uvForLayer01AndLayer02 : TEXCOORD1;
 				float4 uvForLayer03AndLayer04 : TEXCOORD2;
-				
-				#ifdef _MAIN_LIGHT_SHADOWS
-					float4 shadowCoord : TEXCOORD4;
+
+				float4 normalWSAndViewDirX : TEXCOORD3;
+				float4 tangentWSAndViewDirY : TEXCOORD4;
+				float4 bitangentWSAndViewDirZ : TEXCOORD5;
+
+				float3 positionWS : TEXCOORD7;
+
+				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+					float4 shadowCoord : TEXCOORD6;
 				#endif
 				
 			};
 
 			v2f vert(a2v v) {
 				v2f o = (v2f)0;
+				// for enable gpu instance
 				UNITY_SETUP_INSTANCE_ID(v)
 				VertexPositionInputs vpi = GetVertexPositionInputs(v.posOS.xyz);
 				o.positionCS = vpi.positionCS;
+				o.positionWS = vpi.positionWS;
 				o.uvForControlMap = TRANSFORM_TEX(v.texcoord, _ControlMap);
 				
 				o.uvForLayer01AndLayer02.xy = v.texcoord.xy * _Layer01Tilling;
@@ -131,7 +141,11 @@
 				o.uvForLayer03AndLayer04.xy = v.texcoord.xy * _Layer03Tilling;
 				o.uvForLayer03AndLayer04.zw = v.texcoord.xy * _Layer04Tilling;
 
-				#ifdef _MAIN_LIGHT_SHADOWS
+				// for normal
+				VertexNormalInputs vni = GetVertexNormalInputs(v.normalOS, v.tangentOS);
+				o.normalWSAndViewDirX.xyz = vni.normalWS;
+
+				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
 					o.shadowCoord = GetShadowCoord(vpi);
 				#endif
 
@@ -146,6 +160,9 @@
 				return albedo01 + albedo02 + albedo03 + albedo04;
 			}
 
+			half4 GetShaodwCoordInFrag() {
+			}
+
 			half4 frag(v2f i) : SV_TARGET {
 				half4 controlColor = SAMPLE_TEXTURE2D(_ControlMap, sampler_ControlMap, i.uvForControlMap);
 				#ifdef _CONTROLMAP_SHOW
@@ -157,17 +174,28 @@
 				half4 color_Layer03_Albedo = SAMPLE_TEXTURE2D(_TexLayer03, sampler_TexLayer03, i.uvForLayer03AndLayer04.xy);
 				half4 color_Layer04_Albedo = SAMPLE_TEXTURE2D(_TexLayer04, sampler_TexLayer04, i.uvForLayer03AndLayer04.zw);
 
+				// for shadowCoord in frag for shadowmap
+				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+					float4 shadowCoord = i.shadowCoord;
+				#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
+					float4 shadowCoord = TransformWorldToShadowCoord(i.positionWS);
+				#else
+					float4 shadowCoord = float4(0, 0, 0, 0);
+				#endif
+
 				#ifdef _MAIN_LIGHT_SHADOWS
-					Light mainLight = GetMainLight(i.shadowCoord);
+					Light mainLight = GetMainLight(shadowCoord);
 				#else
 					Light mainLight = GetMainLight();
 				#endif
 
 				half3 finalAlbedo = GetMixedAlbedo(controlColor, color_Layer01_Albedo.rgb, color_Layer02_Albedo.rgb, color_Layer03_Albedo.rgb, color_Layer04_Albedo.rgb);
 
+				half NdotL = saturate(dot(i.normalWSAndViewDirX.xyz, mainLight.direction));
+				half3 lambert = mainLight.color * NdotL;
 
 
-				return half4(finalAlbedo, 1);
+				return half4(lambert, 1);
 			}
 
 			ENDHLSL
