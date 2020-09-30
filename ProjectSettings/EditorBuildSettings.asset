@@ -6,24 +6,24 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/LevelSelect/LevelSelect.unity
-    guid: 6e914dc067c9f4507847707cdffbe64e
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Scenes/Title/Title.unity
-    guid: c2d8288d29722425a8f007692f351a7c
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Scenes/LevelHandler/LevelHandler.unity
-    guid: c980665f246764cc791df723aac2f921
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/ThirdParty/Other/Levels/Dejavu_level.unity
-    guid: 3ab11377c18714b2ea6cb95c722b4b52
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/ThirdParty/Other/Levels/Leap_level.unity
-    guid: df8c8bab4eb904b10928751e682dd324
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/ThirdParty/Other/Levels/Tutorial_level.unity
-    guid: c4521c8e03956418595a96352993dafb
-  - enabled: 1
-    path: Assets/Scenes/SausageShip.unity
-    guid: 8582e0645eec9534785cbcedfba8bbf1
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects: {}
