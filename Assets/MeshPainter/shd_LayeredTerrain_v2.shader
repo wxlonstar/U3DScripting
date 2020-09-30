@@ -5,7 +5,7 @@
 		_Weight("Blend Weight", Range(0.001, 1)) = 0.05
 		//_ControlMapTilling("Tilling ControlMap", Range(1, 70)) = 1
 
-		[Header(Layer 01)]
+		[Header(Layer Background)]
 		[Space(5)]
 		_Layer01Tilling("Tilling Layer 01", Range(1, 70)) = 1
 		[NoScaleOffset]_TexLayer01("Layer01 Albedo (A for AO)", 2D) = "white" {}
