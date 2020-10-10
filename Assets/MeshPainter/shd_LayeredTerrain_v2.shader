@@ -1,40 +1,41 @@
 ﻿Shader "MileShader/shd_layeredTerrain_v2" {
 	Properties {
-		_Slider("Slider Test", Range(0, 1)) = 1
 		[Toggle(_CONTROLMAP_SHOW)]_ShowControlMap("Show Control Map", float) = 0
 		_ControlMap("ControlMap", 2D) = "white" {} 
 		_Weight("Blend Weight", Range(0.001, 1)) = 0.05
+		_SpecularIntensity("Specular Intensity", Range(64, 512)) = 1
+		_SpecularColor("Specular Color", Color) = (0, 0, 0, 0)
 		//_ControlMapTilling("Tilling ControlMap", Range(1, 70)) = 1
 
 		[Header(Layer Background)]
 		[Space(5)]
 		_Layer01Tilling("Tilling Layer 01", Range(1, 70)) = 1
-		[NoScaleOffset]_TexLayer01("Layer01 Albedo (A for AO)", 2D) = "white" {}
-		[NoScaleOffset][Normal]_TexLayer01_Normal("Layer01 Normal (A for Specular)", 2D) = "bump" {}
+		[NoScaleOffset]_TexLayer01("Layer01 Albedo (A for Spec)", 2D) = "white" {}
+		[NoScaleOffset][Normal]_TexLayer01_Normal("Layer01 Normal", 2D) = "bump" {}
 		_TexLayer01_Normal_Intensity("Normal Scale", Range(0, 2)) = 1
 		[Space(20)]
 
 		[Header(Layer 02)]
 		[Space(5)]
 		_Layer02Tilling("Tilling Layer 02", Range(1, 70)) = 1
-		[NoScaleOffset]_TexLayer02("Layer02 Albedo (A for AO)", 2D) = "white" {}
-		[NoScaleOffset][Normal]_TexLayer02_Normal("Layer02 Normal (A for Specular)", 2D) = "bump" {}
+		[NoScaleOffset]_TexLayer02("Layer02 Albedo (A for Spec)", 2D) = "white" {}
+		[NoScaleOffset][Normal]_TexLayer02_Normal("Layer02 Normal", 2D) = "bump" {}
 		_TexLayer02_Normal_Intensity("Normal Scale", Range(0, 2)) = 1
 		[Space(20)]
 
 		[Header(Layer 03)]
 		[Space(5)]
 		_Layer03Tilling("Tilling Layer 03", Range(1, 70)) = 1
-		[NoScaleOffset]_TexLayer03("Layer03 Albedo (A for AO)", 2D) = "white" {}
-		[NoScaleOffset][Normal]_TexLayer03_Normal("Layer03 Normal (A for Specular)", 2D) = "bump" {}
+		[NoScaleOffset]_TexLayer03("Layer03 Albedo (A for Spec)", 2D) = "white" {}
+		[NoScaleOffset][Normal]_TexLayer03_Normal("Layer03 Normal", 2D) = "bump" {}
 		_TexLayer03_Normal_Intensity("Normal Scale", Range(0, 2)) = 1
 		[Space(20)]
 
 		[Header(Layer 04)]
 		[Space(5)]
 		_Layer04Tilling("Tilling Layer 04", Range(1, 70)) = 1
-		[NoScaleOffset]_TexLayer04("Layer04 Albedo (A for AO)", 2D) = "white" {}
-		[NoScaleOffset][Normal]_TexLayer04_Normal("Layer04 Normal (A for Specular)", 2D) = "bump" {}
+		[NoScaleOffset]_TexLayer04("Layer04 Albedo (A for Spec)", 2D) = "white" {}
+		[NoScaleOffset][Normal]_TexLayer04_Normal("Layer04 Normal", 2D) = "bump" {}
 		_TexLayer04_Normal_Intensity("Normal Scale", Range(0, 2)) = 1
 
 	}
@@ -71,7 +72,9 @@
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
 			CBUFFER_START(UnityPerMaterial)
-			half _Slider;
+			half _SpecularIntensity;
+			half4 _SpecularColor;
+			half _Weight;
 
 			float4 _ControlMap_ST;
 			half _ControlMapTilling;
@@ -177,7 +180,17 @@
 				return o;
 			}
 
-			half3 GetMixedAlbedo(half4 controlColor, half3 albedo01, half3 albedo02, half3 albedo03, half3 albedo04) {
+			half4 GetControlValue(half weight, half4 controlColor) {
+				half4 controlValue;
+				controlValue = controlColor;
+				half4 maxControl = controlValue - (max(controlValue.r, max(controlValue.g, max(controlValue.b, controlValue.a))));
+				half4 withWeight = max(maxControl + weight, half4(0, 0, 0, 0)) * controlColor;
+				half4 finalValue = withWeight / (withWeight.r + withWeight.g + withWeight.b + withWeight.a);
+
+				return finalValue;
+			}
+
+			half4 GetMixedAlbedoAndSpecular(half4 controlColor, half4 albedo01, half4 albedo02, half4 albedo03, half4 albedo04) {
 				albedo01 = albedo01 * controlColor.r;
 				albedo02 = albedo02 * controlColor.g;
 				albedo03 = albedo03 * controlColor.b;
@@ -190,15 +203,7 @@
 				normal02 = normal02 * controlColor.g;
 				normal03 = normal03 * controlColor.b;
 				normal04 = normal04 * controlColor.a;
-				return normal01 + normal02 + normal03 + normal04;
-			}
-
-			half GetMixedAO(half4 controlColor, half ao1, half ao2, half ao3, half ao4) {
-				ao1 = ao1 * controlColor.r;
-				ao2 = ao2 * controlColor.g;
-				ao3 = ao3 * controlColor.b;
-				ao4 = ao4 * controlColor.a;
-				return ao1 + ao2 + ao3 + ao4;
+				return normalize(normal01 + normal02 + normal03 + normal04);
 			}
 
 
@@ -235,25 +240,31 @@
 			}
 
 
+
+
 			half4 frag(v2f i) : SV_TARGET {
 				half4 controlColor = SAMPLE_TEXTURE2D(_ControlMap, sampler_ControlMap, i.uvForControlMap);
 				#ifdef _CONTROLMAP_SHOW
 					return controlColor;
 				#endif
+
+				half4 controlValue = GetControlValue(_Weight, controlColor);
+
 				// get mixed albedo
 				half4 color_Layer01_Albedo = SAMPLE_TEXTURE2D(_TexLayer01, sampler_TexLayer01, i.uvForLayer01AndLayer02.xy);
 				half4 color_Layer02_Albedo = SAMPLE_TEXTURE2D(_TexLayer02, sampler_TexLayer02, i.uvForLayer01AndLayer02.zw);
 				half4 color_Layer03_Albedo = SAMPLE_TEXTURE2D(_TexLayer03, sampler_TexLayer03, i.uvForLayer03AndLayer04.xy);
 				half4 color_Layer04_Albedo = SAMPLE_TEXTURE2D(_TexLayer04, sampler_TexLayer04, i.uvForLayer03AndLayer04.zw);
-				half3 mixedAlbedo = GetMixedAlbedo(controlColor, color_Layer01_Albedo.rgb, color_Layer02_Albedo.rgb, color_Layer03_Albedo.rgb, color_Layer04_Albedo.rgb);
-				half mixedAO = GetMixedAO(controlColor, color_Layer01_Albedo.a, 1, 1, 1) * _Slider;
+				half4 mixedAlbedoAndSpecular = GetMixedAlbedoAndSpecular(controlValue, color_Layer01_Albedo, color_Layer02_Albedo, color_Layer03_Albedo, color_Layer04_Albedo);
+				half3 mixedAlbedo = mixedAlbedoAndSpecular.rgb;
+				half mixedSpecular = mixedAlbedoAndSpecular.a;
 
 				// get mixed normal
 				half4 color_Layer01_NormalTS = SampleNormalWithScale(i.uvForLayer01AndLayer02.xy, TEXTURE2D_ARGS(_TexLayer01_Normal, sampler_TexLayer01_Normal), _TexLayer01_Normal_Intensity);
 				half4 color_Layer02_NormalTS = SampleNormalWithScale(i.uvForLayer01AndLayer02.zw, TEXTURE2D_ARGS(_TexLayer02_Normal, sampler_TexLayer02_Normal), _TexLayer02_Normal_Intensity);
 				half4 color_Layer03_NormalTS = SampleNormalWithScale(i.uvForLayer03AndLayer04.xy, TEXTURE2D_ARGS(_TexLayer03_Normal, sampler_TexLayer03_Normal), _TexLayer03_Normal_Intensity);
 				half4 color_Layer04_NormalTS = SampleNormalWithScale(i.uvForLayer03AndLayer04.zw, TEXTURE2D_ARGS(_TexLayer04_Normal, sampler_TexLayer04_Normal), _TexLayer04_Normal_Intensity);
-				half3 mixedNormalTS = GetMixedNormalTS(controlColor, color_Layer01_NormalTS.xyz, color_Layer02_NormalTS.xyz, color_Layer03_NormalTS.xyz, color_Layer04_NormalTS.xyz);
+				half3 mixedNormalTS = GetMixedNormalTS(controlValue, color_Layer01_NormalTS.rgb, color_Layer02_NormalTS.rgb, color_Layer03_NormalTS.rgb, color_Layer04_NormalTS.rgb);
 
 				InputData inputData;
 				InitializeInputData(i, mixedNormalTS, inputData);
@@ -269,13 +280,20 @@
 					Light mainLight = GetMainLight();
 				#endif
 
+				half fresnelTerm = Pow4(1.0 - saturate(dot(inputData.normalWS, inputData.viewDirectionWS)));
+
+				//fresnelTerm =  saturate(1 - pow(fresnelTerm, 30));
+				//mixedSpecular = pow(mixedSpecular, 30);
+
+				half3 spec = LightingSpecular(mainLight.color, mainLight.direction, inputData.normalWS, inputData.viewDirectionWS, _SpecularColor * mixedSpecular, _SpecularIntensity);
+
 				MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, half4(0, 0, 0, 0));
 				half3 attenuatedLightColor = mainLight.color * (mainLight.distanceAttenuation * mainLight.shadowAttenuation);
-				half3 finalColor = (inputData.bakedGI * ((1 - _Slider) + mixedAO) + LightingLambert(attenuatedLightColor, mainLight.direction, inputData.normalWS)) * mixedAlbedo;
+				half3 finalColor = (inputData.bakedGI + LightingLambert(attenuatedLightColor, mainLight.direction, inputData.normalWS)) * mixedAlbedo;
 				
 				finalColor.rgb = MixFog(finalColor.rgb, inputData.fogCoord);
 
-				return half4(finalColor, 1);
+				return half4(finalColor + spec, 1);
 			}
 
 			ENDHLSL

@@ -61,10 +61,13 @@ Material:
     - _Layer03Tilling: 15
     - _Layer04Tilling: 20
     - _ShowControlMap: 0
-    - _Slider: 1
+    - _Slider: 64
+    - _SpecularIntensity: 207
     - _TexLayer01_Normal_Intensity: 1
     - _TexLayer02_Normal_Intensity: 1
     - _TexLayer03_Normal_Intensity: 1
     - _TexLayer04_Normal_Intensity: 1
-    - _Weight: 0.255
-    m_Colors: []
+    - _Weight: 0.189
+    m_Colors:
+    - _EdgeColor01: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecularColor: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 0}

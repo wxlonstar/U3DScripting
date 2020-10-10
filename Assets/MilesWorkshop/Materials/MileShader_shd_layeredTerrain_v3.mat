@@ -24,7 +24,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TexLayer01:
-        m_Texture: {fileID: 2800000, guid: 2bfd140e89928474180b9da9a96e92bf, type: 3}
+        m_Texture: {fileID: 2800000, guid: 92b7af2f09d7b9e41920f93301ce2045, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TexLayer01_Normal:
@@ -61,10 +61,13 @@ Material:
     - _Layer03Tilling: 1
     - _Layer04Tilling: 1
     - _ShowControlMap: 0
-    - _Slider: 0
-    - _TexLayer01_Normal_Intensity: 1
+    - _Slider: 1
+    - _SpecularIntensity: 175
+    - _TexLayer01_Normal_Intensity: 1.38
     - _TexLayer02_Normal_Intensity: 1
     - _TexLayer03_Normal_Intensity: 1
     - _TexLayer04_Normal_Intensity: 1
-    - _Weight: 0.05
-    m_Colors: []
+    - _Weight: 0.001
+    m_Colors:
+    - _EdgeColor01: {r: 0.735849, g: 0.735849, b: 0.735849, a: 0}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 0}
