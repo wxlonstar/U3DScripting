@@ -28,7 +28,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TexLayer01_Normal:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: d4ec9d9fbefcdd241bde7835c4d3ba29, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TexLayer02:
@@ -36,7 +36,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TexLayer02_Normal:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: a59804b149e42ee4f907bf1f96116081, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TexLayer03:
@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TexLayer03_Normal:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 836ec74e6251f89449b9be2453794a7e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TexLayer04:
@@ -52,18 +52,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TexLayer04_Normal:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 94101f25ce22b4542895611cae78fc6d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Layer01Tilling: 20
-    - _Layer02Tilling: 20
-    - _Layer03Tilling: 20
+    - _Layer02Tilling: 29.5
+    - _Layer03Tilling: 15
     - _Layer04Tilling: 20
     - _ShowControlMap: 0
+    - _Slider: 1
     - _TexLayer01_Normal_Intensity: 1
     - _TexLayer02_Normal_Intensity: 1
     - _TexLayer03_Normal_Intensity: 1
     - _TexLayer04_Normal_Intensity: 1
-    - _Weight: 0.093
+    - _Weight: 0.255
     m_Colors: []

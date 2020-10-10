@@ -1,5 +1,6 @@
 ﻿Shader "MileShader/shd_layeredTerrain_v2" {
 	Properties {
+		_Slider("Slider Test", Range(0, 1)) = 1
 		[Toggle(_CONTROLMAP_SHOW)]_ShowControlMap("Show Control Map", float) = 0
 		_ControlMap("ControlMap", 2D) = "white" {} 
 		_Weight("Blend Weight", Range(0.001, 1)) = 0.05
@@ -70,6 +71,7 @@
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
 			CBUFFER_START(UnityPerMaterial)
+			half _Slider;
 
 			float4 _ControlMap_ST;
 			half _ControlMapTilling;
@@ -102,7 +104,8 @@
 
 			struct a2v {
 				float4 posOS : POSITION;
-				float4 texcoord : TEXCOORD0;
+				float2 texcoord : TEXCOORD0;
+				float2 lightmapUV : TEXCOORD1;
 				float3 normalOS : NORMAL;
 				float4 tangentOS : TANGENT;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -111,18 +114,25 @@
 			struct v2f {
 				float4 positionCS : SV_POSITION;
 				float2 uvForControlMap : TEXCOORD0;
-				float4 uvForLayer01AndLayer02 : TEXCOORD1;
-				float4 uvForLayer03AndLayer04 : TEXCOORD2;
 
-				float4 normalWSAndViewDirX : TEXCOORD3;
-				float4 tangentWSAndViewDirY : TEXCOORD4;
-				float4 bitangentWSAndViewDirZ : TEXCOORD5;
+				DECLARE_LIGHTMAP_OR_SH(lightmapUV, vertexSH, 1);
 
-				float3 positionWS : TEXCOORD7;
+				float4 uvForLayer01AndLayer02 : TEXCOORD2;
+				float4 uvForLayer03AndLayer04 : TEXCOORD3;
+
+
+				half4 normalWSAndViewDirX : TEXCOORD4;
+				half4 tangentWSAndViewDirY : TEXCOORD5;
+				half4 bitangentWSAndViewDirZ : TEXCOORD6;
+
+				float4 positionWSWithFogFactor : TEXCOORD7;
 
 				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-					float4 shadowCoord : TEXCOORD6;
+					float4 shadowCoord : TEXCOORD8;
 				#endif
+
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				UNITY_VERTEX_OUTPUT_STEREO
 				
 			};
 
@@ -130,24 +140,39 @@
 				v2f o = (v2f)0;
 				// for enable gpu instance
 				UNITY_SETUP_INSTANCE_ID(v)
+				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+
+				// vertexPositionInputs
 				VertexPositionInputs vpi = GetVertexPositionInputs(v.posOS.xyz);
 				o.positionCS = vpi.positionCS;
-				o.positionWS = vpi.positionWS;
+				o.positionWSWithFogFactor.xyz = vpi.positionWS;
+
+				// fog
+				o.positionWSWithFogFactor.w = ComputeFogFactor(vpi.positionCS.z);
+
 				o.uvForControlMap = TRANSFORM_TEX(v.texcoord, _ControlMap);
 				
 				o.uvForLayer01AndLayer02.xy = v.texcoord.xy * _Layer01Tilling;
 				o.uvForLayer01AndLayer02.zw = v.texcoord.xy * _Layer02Tilling;
-
 				o.uvForLayer03AndLayer04.xy = v.texcoord.xy * _Layer03Tilling;
 				o.uvForLayer03AndLayer04.zw = v.texcoord.xy * _Layer04Tilling;
 
-				// for normal
+				// for normal and viewDir
+				half3 viewDirWS = GetCameraPositionWS() - vpi.positionWS;
 				VertexNormalInputs vni = GetVertexNormalInputs(v.normalOS, v.tangentOS);
-				o.normalWSAndViewDirX.xyz = vni.normalWS;
+				o.normalWSAndViewDirX = half4(vni.normalWS, viewDirWS.x);
+				o.tangentWSAndViewDirY = half4(vni.tangentWS, viewDirWS.y);
+				o.bitangentWSAndViewDirZ = half4(vni.bitangentWS, viewDirWS.z);
 
+				// shadowCoord
 				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
 					o.shadowCoord = GetShadowCoord(vpi);
 				#endif
+
+				// GI
+				OUTPUT_LIGHTMAP_UV(v.lightmapUV, unity_LightmapST, o.lightmapUV);
+				OUTPUT_SH(o.normalWSAndViewDirX.xyz, o.vertexSH);
 
 				return o;
 			}
@@ -160,42 +185,97 @@
 				return albedo01 + albedo02 + albedo03 + albedo04;
 			}
 
-			half4 GetShaodwCoordInFrag() {
+			half3 GetMixedNormalTS(half4 controlColor, half3 normal01, half3 normal02, half3 normal03, half3 normal04) {
+				normal01 = normal01 * controlColor.r;
+				normal02 = normal02 * controlColor.g;
+				normal03 = normal03 * controlColor.b;
+				normal04 = normal04 * controlColor.a;
+				return normal01 + normal02 + normal03 + normal04;
 			}
+
+			half GetMixedAO(half4 controlColor, half ao1, half ao2, half ao3, half ao4) {
+				ao1 = ao1 * controlColor.r;
+				ao2 = ao2 * controlColor.g;
+				ao3 = ao3 * controlColor.b;
+				ao4 = ao4 * controlColor.a;
+				return ao1 + ao2 + ao3 + ao4;
+			}
+
+
+
+			half4 SampleNormalWithScale(float2 uv, TEXTURE2D_PARAM(bumpMap, sampler_bumpMap), half scale = 1.0h) {
+				half4 normalTS = SAMPLE_TEXTURE2D(bumpMap, sampler_bumpMap, uv);
+				return half4(UnpackNormalScale(normalTS, scale).xyz, normalTS.w);
+			}
+
+
+			void InitializeInputData(v2f i, half3 normalTS, out InputData inputData) {
+				inputData = (InputData)0;
+
+				inputData.positionWS = i.positionWSWithFogFactor.xyz;
+
+				half3 viewDirWS = half3(i.normalWSAndViewDirX.w, i.tangentWSAndViewDirY.w, i.bitangentWSAndViewDirZ.w);
+				inputData.viewDirectionWS = SafeNormalize(viewDirWS);
+
+				inputData.normalWS = TransformTangentToWorld(normalTS, half3x3(i.tangentWSAndViewDirY.xyz, i.bitangentWSAndViewDirZ.xyz, i.normalWSAndViewDirX.xyz));
+				inputData.normalWS = NormalizeNormalPerPixel(inputData.normalWS);
+
+				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+					inputData.shadowCoord = i.shadowCoord;
+				#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
+					inputData.shadowCoord = TransformWorldToShadowCoord(i.positionWSWithFogFactor.xyz);
+				#else
+					inputData.shadowCoord = float4(0, 0, 0, 0);
+				#endif
+
+				inputData.fogCoord = i.positionWSWithFogFactor.w;
+				inputData.vertexLighting = half3(0, 1, 0);
+
+				inputData.bakedGI = SAMPLE_GI(i.lightmapUV, i.vertexSH, inputData.normalWS);
+			}
+
 
 			half4 frag(v2f i) : SV_TARGET {
 				half4 controlColor = SAMPLE_TEXTURE2D(_ControlMap, sampler_ControlMap, i.uvForControlMap);
 				#ifdef _CONTROLMAP_SHOW
 					return controlColor;
 				#endif
-
+				// get mixed albedo
 				half4 color_Layer01_Albedo = SAMPLE_TEXTURE2D(_TexLayer01, sampler_TexLayer01, i.uvForLayer01AndLayer02.xy);
 				half4 color_Layer02_Albedo = SAMPLE_TEXTURE2D(_TexLayer02, sampler_TexLayer02, i.uvForLayer01AndLayer02.zw);
 				half4 color_Layer03_Albedo = SAMPLE_TEXTURE2D(_TexLayer03, sampler_TexLayer03, i.uvForLayer03AndLayer04.xy);
 				half4 color_Layer04_Albedo = SAMPLE_TEXTURE2D(_TexLayer04, sampler_TexLayer04, i.uvForLayer03AndLayer04.zw);
+				half3 mixedAlbedo = GetMixedAlbedo(controlColor, color_Layer01_Albedo.rgb, color_Layer02_Albedo.rgb, color_Layer03_Albedo.rgb, color_Layer04_Albedo.rgb);
+				half mixedAO = GetMixedAO(controlColor, color_Layer01_Albedo.a, 1, 1, 1) * _Slider;
 
-				// for shadowCoord in frag for shadowmap
-				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-					float4 shadowCoord = i.shadowCoord;
-				#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-					float4 shadowCoord = TransformWorldToShadowCoord(i.positionWS);
-				#else
-					float4 shadowCoord = float4(0, 0, 0, 0);
-				#endif
+				// get mixed normal
+				half4 color_Layer01_NormalTS = SampleNormalWithScale(i.uvForLayer01AndLayer02.xy, TEXTURE2D_ARGS(_TexLayer01_Normal, sampler_TexLayer01_Normal), _TexLayer01_Normal_Intensity);
+				half4 color_Layer02_NormalTS = SampleNormalWithScale(i.uvForLayer01AndLayer02.zw, TEXTURE2D_ARGS(_TexLayer02_Normal, sampler_TexLayer02_Normal), _TexLayer02_Normal_Intensity);
+				half4 color_Layer03_NormalTS = SampleNormalWithScale(i.uvForLayer03AndLayer04.xy, TEXTURE2D_ARGS(_TexLayer03_Normal, sampler_TexLayer03_Normal), _TexLayer03_Normal_Intensity);
+				half4 color_Layer04_NormalTS = SampleNormalWithScale(i.uvForLayer03AndLayer04.zw, TEXTURE2D_ARGS(_TexLayer04_Normal, sampler_TexLayer04_Normal), _TexLayer04_Normal_Intensity);
+				half3 mixedNormalTS = GetMixedNormalTS(controlColor, color_Layer01_NormalTS.xyz, color_Layer02_NormalTS.xyz, color_Layer03_NormalTS.xyz, color_Layer04_NormalTS.xyz);
+
+				InputData inputData;
+				InitializeInputData(i, mixedNormalTS, inputData);
+
+				/*
+				half NdotL = saturate(dot(i.normalWSAndViewDirX.xyz, mainLight.direction));
+				half3 lambert = mainLight.color * NdotL;
+				*/
 
 				#ifdef _MAIN_LIGHT_SHADOWS
-					Light mainLight = GetMainLight(shadowCoord);
+					Light mainLight = GetMainLight(inputData.shadowCoord);
 				#else
 					Light mainLight = GetMainLight();
 				#endif
 
-				half3 finalAlbedo = GetMixedAlbedo(controlColor, color_Layer01_Albedo.rgb, color_Layer02_Albedo.rgb, color_Layer03_Albedo.rgb, color_Layer04_Albedo.rgb);
+				MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, half4(0, 0, 0, 0));
+				half3 attenuatedLightColor = mainLight.color * (mainLight.distanceAttenuation * mainLight.shadowAttenuation);
+				half3 finalColor = (inputData.bakedGI * ((1 - _Slider) + mixedAO) + LightingLambert(attenuatedLightColor, mainLight.direction, inputData.normalWS)) * mixedAlbedo;
+				
+				finalColor.rgb = MixFog(finalColor.rgb, inputData.fogCoord);
 
-				half NdotL = saturate(dot(i.normalWSAndViewDirX.xyz, mainLight.direction));
-				half3 lambert = mainLight.color * NdotL;
-
-
-				return half4(lambert, 1);
+				return half4(finalColor, 1);
 			}
 
 			ENDHLSL
