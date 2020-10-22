@@ -1,0 +1,68 @@
+﻿Shader "SoFunny/shd_heightFog_v2" {
+    Properties {
+        _Color1("Color1", Color) = (1, 1, 1, 1)
+        _Color2("Color2", Color) = (1, 1, 1, 1)
+        _Color3("Color3", Color) = (1, 1, 1, 1)
+        [Toggle]_ANOTHER("Another Prop", Float) = 0
+    }
+    SubShader {
+        Tags {"RenderType" = "Opaque" "Queue" = "Geometry" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True"}
+        Pass {
+            Name "SimpleLit"
+            Tags {"LightMode" = "UniversalForward"}
+            //Blend SrcAlpha OneMinusSrcAlpha
+            //ZWrite Off
+            
+            HLSLPROGRAM
+            #pragma prefer_hlslcc gles
+            #pragma exclude_renderers d3d11_9x
+            #pragma target 2.0
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            #pragma vertex vert
+            #pragma fragment frag
+
+            CBUFFER_START(UnityPerMaterial)
+            half4 _Color1;
+            float4x4 _Matrix_Inv_VP;
+            half4 _FogColor;
+            half _FogDensity;
+            half _FogHeight;
+            CBUFFER_END
+            TEXTURE2D_X(_CameraDepthTexture);
+            SAMPLER(sampler_CameraDepthTexture);
+
+            struct a2v {
+                float4 positionOS : POSITION;
+                float2 uv : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            float GetHeightFog(float3 positionOS, float3 positionCamera, float fogDensity, float fog) {
+            }
+
+            struct v2f {
+                float2 uv : TEXCOORD0;
+                float4 positionCS : SV_POSITION;
+            };
+
+
+            v2f vert(a2v v) {
+                v2f o = (v2f)0;
+                UNITY_SETUP_INSTANCE_ID(v);
+                VertexPositionInputs vpi = GetVertexPositionInputs(v.positionOS.xyz);
+                o.positionCS = vpi.positionCS;
+                return o;
+            }
+            
+            half4 frag(v2f i) : SV_TARGET {
+                return _Color1;
+            }
+            
+            ENDHLSL
+            
+        }
+        
+    }
+}
