@@ -7,3 +7,5 @@ obj
 *.sln
 .vscode
 *.user
+Assets/AmplifyShaderEditor
+Assets/AmplifyShaderEditor.meta
