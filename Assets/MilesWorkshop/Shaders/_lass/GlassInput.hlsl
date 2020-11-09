@@ -42,6 +42,7 @@ UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 TEXTURE2D(_OcclusionMap);       SAMPLER(sampler_OcclusionMap);
 TEXTURE2D(_MetallicGlossMap);   SAMPLER(sampler_MetallicGlossMap);
 TEXTURE2D(_SpecGlossMap);       SAMPLER(sampler_SpecGlossMap);
+TEXTURE2D(_MatCap);             SAMPLER(sampler_MatCap);
 TEXTURE2D(_CameraOpaqueTexture);           SAMPLER(sampler_CameraOpaqueTexture);
 
 #ifdef _SPECULAR_SETUP

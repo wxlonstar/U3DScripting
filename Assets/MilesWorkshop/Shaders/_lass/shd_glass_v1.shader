@@ -18,6 +18,7 @@ Shader "Sofunny/shd_glass_v1" {
 
         _EmissionColor("Color", Color) = (0,0,0)
         _EmissionMap("Emission", 2D) = "white" {}
+        _MatCap("MatCap", 2D) = "black" {}
     }
 
     SubShader {
@@ -67,6 +68,7 @@ Shader "Sofunny/shd_glass_v1" {
             #pragma fragment LitPassFragment
             
             #define _USE_REFRACTION 1
+            #define _USE_MATCAP 1
 
             #include "GlassInput.hlsl"
             #include "GlassForwardPass.hlsl"

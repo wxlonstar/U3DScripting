@@ -1,4 +1,5 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+#include "GlassFunction.hlsl"
 
 struct Attributes {
     float4 positionOS   : POSITION;
@@ -71,40 +72,6 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
     inputData.bakedGI = SAMPLE_GI(input.lightmapUV, input.vertexSH, inputData.normalWS);
 }
 
-half4 FrameWorkFragmentPBR(InputData inputData, half3 albedo, half metallic, half3 specular,
-    half smoothness, half occlusion, half3 emission, half alpha) {
-#ifdef _SPECULARHIGHLIGHTS_OFF
-    bool specularHighlightsOff = true;
-#else
-    bool specularHighlightsOff = false;
-#endif
-
-    BRDFData brdfData;
-    InitializeBRDFData(albedo, metallic, specular, smoothness, alpha, brdfData);
-    
-    Light mainLight = GetMainLight(inputData.shadowCoord);
-    MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, half4(0, 0, 0, 0));
-
-    half3 color = GlobalIllumination(brdfData, inputData.bakedGI, occlusion, inputData.normalWS, inputData.viewDirectionWS);
-    color += LightingPhysicallyBased(brdfData, mainLight, inputData.normalWS, inputData.viewDirectionWS, specularHighlightsOff);
-
-#ifdef _ADDITIONAL_LIGHTS
-    uint pixelLightCount = GetAdditionalLightsCount();
-    for (uint lightIndex = 0u; lightIndex < pixelLightCount; ++lightIndex)
-    {
-        Light light = GetAdditionalLight(lightIndex, inputData.positionWS);
-        color += LightingPhysicallyBased(brdfData, light, inputData.normalWS, inputData.viewDirectionWS, specularHighlightsOff);
-    }
-#endif
-
-#ifdef _ADDITIONAL_LIGHTS_VERTEX
-    color += inputData.vertexLighting * brdfData.diffuse;
-#endif
-
-    color += emission;
-    return half4(color, alpha);
-}
-
 Varyings LitPassVertex(Attributes input) {
     Varyings output = (Varyings)0;
 
@@ -163,22 +130,29 @@ half4 LitPassFragment(Varyings input) : SV_Target {
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
 
-    half4 color = FrameWorkFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.occlusion, surfaceData.emission, surfaceData.alpha);
-    
-    float fresnel = pow(saturate(dot(inputData.normalWS, inputData.viewDirectionWS)), _Fresnel);
+    half fresnelTerm = Pow4(1.0 - saturate(dot(inputData.normalWS, inputData.viewDirectionWS)));
+    half fresnel = pow(saturate(fresnelTerm * 1.1), _Fresnel);
+
+    half4 color = GlassFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.occlusion, surfaceData.emission, surfaceData.alpha, fresnel);
 
     half4 finalCol;
-    half alpha = color.a + (1 - fresnel);
+    half alpha = color.a + fresnel;
 
     #ifdef _USE_REFRACTION
-    float2 opaqueUV = (input.screenUV.xy + saturate((1 - fresnel) * 0.02 * pow(saturate(input.screenUV.z), 2))) / input.screenUV.w;
-   
+    float addValue = fresnelTerm * 0.05 * pow(saturate(input.screenUV.z), 2);
+    float2 opaqueUV = (input.screenUV.xy + addValue) / input.screenUV.w;
     half4 opaqueCol = SAMPLE_TEXTURE2D(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, UnityStereoTransformScreenSpaceTex(opaqueUV));
     finalCol = lerp(opaqueCol, color, saturate(alpha));
     finalCol.a = 1;
     #else
     finalCol = color;
     finalCol.a = OutputAlpha(alpha);
+    #endif
+
+    #ifdef _USE_MATCAP
+    half3 normalVS = TransformWorldToViewDir(inputData.normalWS);
+    half3 matcap = SAMPLE_TEXTURE2D(_MatCap, sampler_MatCap, normalVS.xy * 0.5 + 0.5).rgb;
+    finalCol.rgb = lerp(finalCol, matcap, fresnel);
     #endif
     
     finalCol.rgb = MixFog(finalCol.rgb, inputData.fogCoord);
