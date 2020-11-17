@@ -1,7 +1,7 @@
 ﻿Shader "SoFunny/Chicken-Terrain_v2" {
     Properties {
-        [NoScaleOffset]_Control01("Splatmap01", 2D) = "white" {}
-        [NoScaleOffset]_Control02("Splatmap02", 2D) = "white" {}
+        [HideInInspector]_Control01("Splatmap01", 2D) = "white" {}
+        [HideInInspector]_Control02("Splatmap02", 2D) = "white" {}
         /*
         _TexLayer01("Layer01 Texture", 2D) = "white" {}
         _TexLayer02("Layer02 Texture", 2D) = "white" {}
@@ -28,7 +28,7 @@
         
         Pass {
             Name "Layer01"
-            Tags{"LightMode" = "UniversalForward"}
+            Tags{"LightMode" = "LightweightForward"}
             HLSLPROGRAM
             #pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
@@ -92,5 +92,5 @@
             Tags{"LightMode" = "ShadowCaster"}
         }
     }
-    Dependency "AddPassShader" = "Hidden/ssUniversal Render Pipeline/Terrain/Lit (Add Pass)"
+
 }

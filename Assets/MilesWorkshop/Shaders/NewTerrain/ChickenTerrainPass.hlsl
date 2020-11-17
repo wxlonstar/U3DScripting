@@ -63,13 +63,12 @@ half4 frag(v2f i) : SV_TARGET {
 	half4 albedo03 = SAMPLE_TEXTURE2D(_TexLayer03, sampler_TexLayer03, i.uvL3L4.xy);
 	half4 albedo04 = SAMPLE_TEXTURE2D(_TexLayer04, sampler_TexLayer04, i.uvL3L4.zw);
 	*/
-	half4 finalAlbedo01 = GetMixedAlbedoAndSpecular(controlValue01, _Color01, _Color02, _Color03, _Color04);
-	half4 finalAlbedo02 = GetMixedAlbedoAndSpecular(controlValue02, _Color05, _Color06, _Color07, _Color08);
+	half4 finalAlbedo01 = GetMixedAlbedoAndSpecular(controlColor01, _Color01, _Color02, _Color03, _Color04);
+	half4 finalAlbedo02 = GetMixedAlbedoAndSpecular(controlColor02, _Color05, _Color06, _Color07, _Color08);
 	//half4 controlColor02 = SAMPLE_TEXTURE2D(_Control02, sampler_Control02, i.uv);
+	return finalAlbedo01 + finalAlbedo02;
+	//return half4(1, 1, 1, 1) - 0.5;
 	//return finalAlbedo01;
-	//return finalAlbedo02;
-	//return half4(1, 1, 1, 1) - _Test;
-	return finalAlbedo01;
 }
 
 
