@@ -1,4 +1,4 @@
-﻿Shader "MileShader/shd_layeredTerrain_v2" {
+﻿Shader "SoFunny/shd_layeredTerrain_v3" {
 	Properties {
 		[Toggle(_CONTROLMAP_SHOW)]_ShowControlMap("Show Control Map", float) = 0
 		_ControlMap("ControlMap", 2D) = "white" {} 
