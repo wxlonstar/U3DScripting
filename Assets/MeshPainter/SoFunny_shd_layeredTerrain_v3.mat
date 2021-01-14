@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SoFunny_shd_layeredTerrain_v3
+  m_Shader: {fileID: 4800000, guid: 6a2c12de1ed3b8c4d8dc34e067a0f7f3, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _ControlMap:
+        m_Texture: {fileID: 2800000, guid: a825a16ea14dc2e458bfbbecc7ff7b5b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TexLayer01:
+        m_Texture: {fileID: 2800000, guid: e81b0affebdb3d7429f7c3541160398e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TexLayer01_Normal:
+        m_Texture: {fileID: 2800000, guid: 0b9b8c97bc7545448915b706b7173df4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TexLayer02:
+        m_Texture: {fileID: 2800000, guid: 8d64f5ac06f88864e979599de9bc2e2b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TexLayer02_Normal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TexLayer03:
+        m_Texture: {fileID: 2800000, guid: 8bed17a6f2089864d80fb63236140070, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TexLayer03_Normal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TexLayer04:
+        m_Texture: {fileID: 2800000, guid: 3feae99d70dc7974493af4540fdc1893, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TexLayer04_Normal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Layer01Tilling: 1
+    - _Layer02Tilling: 1
+    - _Layer03Tilling: 1
+    - _Layer04Tilling: 1
+    - _ShowControlMap: 0
+    - _SpecularIntensity: 1
+    - _TexLayer01_Normal_Intensity: 1
+    - _TexLayer02_Normal_Intensity: 1
+    - _TexLayer03_Normal_Intensity: 1
+    - _TexLayer04_Normal_Intensity: 1
+    - _Weight: 0.195
+    m_Colors:
+    - _SpecularColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
